@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1010782151591",
+    "firebase_url": "https://pdfgen-444d6.firebaseio.com",
+    "project_id": "pdfgen-444d6",
+    "storage_bucket": "pdfgen-444d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010782151591:android:37b58772a3acf05ccf8c82",
+        "android_client_info": {
+          "package_name": "com.formgalley.formgalley"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010782151591-6pve3q10ios1de99rkfgma1mc5m7q333.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqyrYWnicLfjYC78mmlhyIRoFGAyZudmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010782151591-6pve3q10ios1de99rkfgma1mc5m7q333.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1010782151591-qncpoock9b6djv1e7hi7v2t6trholhd9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jolliant.pdfgen"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010782151591:android:9fd61ad4027629decf8c82",
+        "android_client_info": {
+          "package_name": "com.jolliant.pdfgenerator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010782151591-6pve3q10ios1de99rkfgma1mc5m7q333.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqyrYWnicLfjYC78mmlhyIRoFGAyZudmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010782151591-6pve3q10ios1de99rkfgma1mc5m7q333.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1010782151591-qncpoock9b6djv1e7hi7v2t6trholhd9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jolliant.pdfgen"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
