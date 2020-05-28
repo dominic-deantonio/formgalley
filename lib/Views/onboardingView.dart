@@ -31,7 +31,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 
   void finishOnboarding() {
-    prefs.setBool('finishedOnboarding', false);//Change this at production
+    prefs.setBool('finishedOnboarding', false); //Change this at production
     Navigator.of(context).pop();
   }
 
@@ -42,42 +42,97 @@ class _OnboardingViewState extends State<OnboardingView> {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: Text('App Name Here'),
+              flex: 4,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      child: Image.network('https://pngimage.net/wp-content/uploads/2018/06/logo-placeholder-png.png')),
+                  Text('formgalley'),
+                ],
+              ),
             ),
             Expanded(
               flex: 9,
               child: PageView(
                 controller: controller,
                 children: <Widget>[
-                  page(msg: 'Here is page 1', color: Colors.red),
-                  page(msg: 'Here is page 2', color: Colors.blue),
-                  page(msg: 'Here is page 2', color: Colors.green),
+                  page(
+                    msg: 'Welcome to Formgalley!',
+                    sub: 'Generate forms on the go!',
+                    color: Colors.red,
+                  ),
+                  page(
+                    msg: 'We\'ll handle the boring part!',
+                    sub: 'Use your saved data to quickly generate new forms.',
+                    color: Colors.green,
+                  ),
+                  page(
+                    msg: 'Privacy is paramount!',
+                    sub: 'Personal data is never transmitted over a network!',
+                    color: Colors.blue,
+                  ),
+                  page(
+                    msg: 'Get notified when new forms are added.',
+                    sub: 'Enable notifications to get instant access to new forms.',
+                    onPressed: () => print('Tried to turn on notifications'),
+                    color: Colors.yellow,
+                  ),
                 ],
               ),
             ),
+            SizedBox(height: 40),
             SmoothPageIndicator(
               controller: controller,
-              count: 3,
-              effect: WormEffect(activeDotColor: Theme.of(context).primaryColorDark),
-
+              count: 4,
+              effect: WormEffect(
+                dotHeight: 8,
+                dotWidth: 8,
+                activeDotColor: Theme.of(context).primaryColorDark,
+              ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 40),
+            CupertinoButton.filled(
+              child: Text('Get Started'),
+              onPressed: finishOnboarding,
+            ),
+            SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-  Widget page({String msg, Color color}) {
+  Widget page({String msg, String sub, Color color, Function onPressed}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(msg),
-          FlatButton(child: Text('Finish'), onPressed: finishOnboarding,),
+          Expanded(
+            child: Image.network(
+                'https://image.freepik.com/free-vector/hand-drawn-checklist-background_23-2148070711.jpg'),
+          ),
+          onPressed != null
+              ? CupertinoButton(
+                  child: Text(
+                    'Turn on notifications',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  onPressed: onPressed)
+              : Text(' '),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(msg, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Text(
+              sub,
+              style: TextStyle(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
-      color: color,
     );
   }
 }

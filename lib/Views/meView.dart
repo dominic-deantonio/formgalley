@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
+import 'package:formgalley/encryption.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
 class MeView extends StatefulWidget {
@@ -52,8 +53,7 @@ class _MeViewState extends State<MeView> {
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
                                     'Confirm file deletion',
@@ -66,8 +66,7 @@ class _MeViewState extends State<MeView> {
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
                                     'Save provided form data',
@@ -84,6 +83,16 @@ class _MeViewState extends State<MeView> {
                         ).build),
                     title: 'Options',
                     icon: Icon(Icons.settings),
+                  ),
+                  StandardButton(
+                    icon: Icon(Icons.lock),
+                    title: 'Encrypt',
+                    callback: () {
+                      String msg = 'Dominic is cool';
+                      var encrypted = Encryption.encrypt(msg);
+                      print(encrypted);
+                      print(Encryption.decrypt(encrypted));
+                    },
                   ),
                 ],
               ),
