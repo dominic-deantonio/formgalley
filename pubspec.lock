@@ -148,6 +148,13 @@ packages:
       url: "https://github.com/dominic-deantonio/flutter_html_to_pdf.git"
     source: git
     version: "0.5.2"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.3"
   flutter_slidable:
     dependency: "direct main"
     description:

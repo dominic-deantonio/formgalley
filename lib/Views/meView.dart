@@ -87,11 +87,15 @@ class _MeViewState extends State<MeView> {
                   StandardButton(
                     icon: Icon(Icons.lock),
                     title: 'Encrypt',
-                    callback: () {
-                      String msg = 'Dominic is cool';
-                      var encrypted = Encryption.encrypt(msg);
-                      print(encrypted);
-                      print(Encryption.decrypt(encrypted));
+                    callback: () async {
+//                      Encryption.deleteKey();
+                      await Encryption.writeNewKeyInSecureStorage();
+                      await Encryption.getKeyFromSecureStorage();
+                     // testing here
+//                      String msg = 'Dominic is cool';
+//                      var encrypted = Encryption.encrypt(msg);
+//                      print(encrypted);
+//                      print(Encryption.decrypt(encrypted));
                     },
                   ),
                 ],

@@ -68,7 +68,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                   ),
                   page(
                     msg: 'Privacy is paramount!',
-                    sub: 'Personal data is never transmitted over a network!',
+                    sub: 'Personal data is encrypted and never transmitted over a network!',
                     color: Colors.blue,
                   ),
                   page(
