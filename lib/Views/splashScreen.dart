@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formgalley/db.dart';
 import 'package:formgalley/User/user.dart';
+import 'package:formgalley/encryption.dart';
 import 'package:formgalley/utilities/util.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,15 +24,17 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     setState(() => status = 'Initializing local database');
     DB.initializeLocalDb().whenComplete(() {
-      //Set up the single database instance
-      setState(() => status = 'Getting user data');
-      DB.getUserDataFromLocalDb().then((maps) {
-        setState(() => status = 'Loading user data');
-        User.instance.loadUserDataToInstance(maps).whenComplete(() {
-          setState(() => status = 'Loading application');
-          Util.waitMilliseconds(1500).whenComplete(() {
-            widget.onCompletedLoading();
-            //Navigator.of(context).pushReplacementNamed('/welcome', arguments: formData);
+      setState(() => status = 'Initializing encryption');
+      Encryption.initialize().whenComplete(() {
+        setState(() => status = 'Getting user data');
+        DB.getUserDataFromLocalDb().then((maps) {
+          setState(() => status = 'Loading user data');
+          User.instance.loadUserDataToInstance(maps).whenComplete(() {
+            setState(() => status = 'Loading application');
+            Util.waitMilliseconds(1000).whenComplete(() {
+              widget.onCompletedLoading();
+              //Navigator.of(context).pushReplacementNamed('/welcome', arguments: formData);
+            });
           });
         });
       });

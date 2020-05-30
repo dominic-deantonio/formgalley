@@ -9,7 +9,7 @@ import 'package:share_extend/share_extend.dart';
 
 class FilesView extends StatefulWidget {
   final SlidableController slidableController = SlidableController();
-  final Function(String) openFileCallback;
+  final Function(Map<String, dynamic>) openFileCallback;
   final Function() updateFilesViewCallback;
   final List<Map<String, dynamic>> files;
 
@@ -30,7 +30,6 @@ class _FilesViewState extends State<FilesView> {
     return CupertinoPageScaffold(
       child: CupertinoScrollbar(
         child: CustomScrollView(
-          physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
               backgroundColor: Colors.white,
@@ -66,7 +65,7 @@ class _FilesViewState extends State<FilesView> {
                         padding: const EdgeInsets.only(left: 25.0),
                         child: IconSlideAction(
                           iconWidget: Icon(Icons.send),
-                          onTap: () => ShareExtend.share(f['path'], "Send this file"),
+                          onTap: () => FileManager.sendFile(f),
                         ),
                       ),
                     ],
@@ -89,9 +88,9 @@ class _FilesViewState extends State<FilesView> {
                     ],
                     child: StandardButton(
                       title: f['formName'],
-                      description: f['longName'],
+                      subTitle: f['longName'],
                       trailing: Util.getHowLongAgo(d),
-                      callback: () => widget.openFileCallback(f['path']),
+                      callback: () => widget.openFileCallback(f),
                     ),
                   );
                 },

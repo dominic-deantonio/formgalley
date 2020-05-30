@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
+import 'package:formgalley/db.dart';
 import 'package:formgalley/encryption.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
@@ -19,6 +21,7 @@ class _MeViewState extends State<MeView> {
   final String msg =
       'Your data is stored on this device - never transmitted over a network. If you delete the app, your data will be lost forever.';
 
+  Icon encryptionIcon = Icon(Icons.lock);
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -38,8 +41,18 @@ class _MeViewState extends State<MeView> {
                   StandardButton(
                     callback: () => widget.navigateToMyInfo(),
                     title: 'My Info',
-                    description: msg,
+                    subTitle: msg,
                     icon: Icon(Icons.person),
+                  ),
+                  StandardButton(
+                    icon: encryptionIcon,
+                    title: 'Encryption',
+                    subTitle: Encryption.getStatusMessage(),
+                    callback: () async {
+                      setState(() => encryptionIcon = Icon(Icons.lock_outline));
+                      await Util.waitMilliseconds(250);
+                      setState(() => encryptionIcon = Icon(Icons.lock));
+                    },
                   ),
                   StandardButton(
                     callback: () => showDialog(
@@ -85,17 +98,17 @@ class _MeViewState extends State<MeView> {
                     icon: Icon(Icons.settings),
                   ),
                   StandardButton(
-                    icon: Icon(Icons.lock),
-                    title: 'Encrypt',
+                    icon: Icon(Icons.info_outline),
+                    title: 'About',
+                    callback: () {
+                      showAboutDialog(context: context);
+                    },
+                  ),
+                  StandardButton(
+                    icon: Icon(CupertinoIcons.folder_solid),
+                    title: 'Print Database',
                     callback: () async {
-//                      Encryption.deleteKey();
-                      await Encryption.writeNewKeyInSecureStorage();
-                      await Encryption.getKeyFromSecureStorage();
-                     // testing here
-//                      String msg = 'Dominic is cool';
-//                      var encrypted = Encryption.encrypt(msg);
-//                      print(encrypted);
-//                      print(Encryption.decrypt(encrypted));
+                      DB.debugPrintDatabase();
                     },
                   ),
                 ],

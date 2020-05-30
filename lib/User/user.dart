@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:formgalley/User/data.dart';
+import 'package:formgalley/encryption.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:us_states/us_states.dart';
@@ -48,7 +49,8 @@ class User {
 
     for (var map in maps) {
       var key = map['id'];
-      var val = map['value'];
+      var val = map['value']; //these values can be brought in as null - check with encryption
+      val = (val == '' || val == null) ? val : Encryption.decrypt(val);
       for (var data in userData) {
         if (data.databaseId == key) {
           data.setValue(val);
@@ -218,7 +220,6 @@ class User {
       LengthLimitingTextInputFormatter(10),
       WhitelistingTextInputFormatter(RegExp(r"[0-9\-]")),
     ],
-
   );
 
   Data personalPhone = Data(
@@ -260,5 +261,6 @@ class User {
     return out;
   }
 
-  int get ageInYears => birthDate.value != null ? (DateTime.now().difference(birthDate.value).inDays / 365).floor() : '';
+  int get ageInYears =>
+      birthDate.value != null ? (DateTime.now().difference(birthDate.value).inDays / 365).floor() : '';
 }

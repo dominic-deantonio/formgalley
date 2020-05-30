@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formgalley/Widgets/widgetExporter.dart';
-import 'dart:io';
 
+import 'package:formgalley/encryption.dart';
 
 enum InputMethod { text, dropdown, boolean, date, time, currency }
 
@@ -56,10 +55,11 @@ class Data {
     return x.toString();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> prepareForPersistence() {
+    var v = getValue();
     return {
       'id': databaseId,
-      'value': getValue(),
+      'value': (v == '' || v == null) ? v : Encryption.encrypt(v), //can't encrypt nothing or null
     };
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_extend/share_extend.dart';
 
 class FileManager {
   static Future<String> getFilePath() async {
@@ -49,5 +50,14 @@ class FileManager {
       print('Failed to delete $path from directory');
       return false;
     }
+  }
+
+  static Future<void> sendFile(var f) async {
+    ShareExtend.share(
+      f['path'],
+      'file',
+      sharePanelTitle: 'Send this ${f['formName']}',
+      subject: f['formName'],
+    );
   }
 }

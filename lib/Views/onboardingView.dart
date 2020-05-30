@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -47,7 +46,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 children: <Widget>[
                   Expanded(
                       child: Image.network('https://pngimage.net/wp-content/uploads/2018/06/logo-placeholder-png.png')),
-                  Text('formgalley'),
+                  Text('Formgalley'),
                 ],
               ),
             ),
@@ -58,23 +57,23 @@ class _OnboardingViewState extends State<OnboardingView> {
                 children: <Widget>[
                   page(
                     msg: 'Welcome to Formgalley!',
-                    sub: 'Generate forms on the go!',
+                    sub: 'Generate forms on the go',
                     color: Colors.red,
                   ),
                   page(
-                    msg: 'We\'ll handle the boring part!',
-                    sub: 'Use your saved data to quickly generate new forms.',
+                    msg: 'We\'ll handle the boring part',
+                    sub: 'Use your saved data to quickly create new forms',
                     color: Colors.green,
                   ),
                   page(
-                    msg: 'Privacy is paramount!',
-                    sub: 'Personal data is encrypted and never transmitted over a network!',
+                    msg: 'Privacy is Paramount',
+                    sub: 'Personal data is encrypted and never transmitted over a network',
                     color: Colors.blue,
                   ),
                   page(
-                    msg: 'Get notified when new forms are added.',
-                    sub: 'Enable notifications to get instant access to new forms.',
-                    onPressed: () => print('Tried to turn on notifications'),
+                    msg: 'Get notified when new forms are added',
+                    sub: 'Enable notifications to get instant access to new forms',
+                    onPressed: () => print('Clicked the notifications button'),
                     color: Colors.yellow,
                   ),
                 ],

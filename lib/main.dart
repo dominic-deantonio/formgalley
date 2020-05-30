@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:formgalley/Views/viewsExporter.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/db.dart';
-import 'package:formgalley/routeManager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(Main());
 
@@ -26,7 +24,6 @@ class _MainState extends State<Main> {
           DefaultCupertinoLocalizations.delegate,
         ],
         home: Home(),
-        onGenerateRoute: RouteManager.generateRoute,
       );
     else {
       return CupertinoApp(
@@ -108,14 +105,14 @@ class _HomeState extends State<Home> {
                     onFormSelected: (formWithNoInput) async {
                       await goToFullScreen(
                         CollectionView(
-                          selectedForm: formWithNoInput,
+                          selForm: formWithNoInput,
                           onStartProcessing: (formWithUserInput) async {
                             await goToFullScreenReplacement(
                               ProcessingView(
                                 formToBuild: (formWithUserInput),
                                 onViewPdf: (path) async {
                                   await goToFullScreenReplacement(
-                                    PdfView(pdfPath: path),
+                                    PdfView(pdf: path),
                                   );
                                 },
                               ),
@@ -129,7 +126,7 @@ class _HomeState extends State<Home> {
                 case 2:
                   return FilesView(
                     //Must update this after generating new documents
-                    openFileCallback: (path) => goTo(PdfView(pdfPath: path)),
+                    openFileCallback: (pdf) => goToFullScreen(PdfView(pdf: pdf)),
                     updateFilesViewCallback: () => updateFilesTab(),
                     files: finishedFormsData,
                   );

@@ -1,3 +1,4 @@
+import 'package:formgalley/encryption.dart';
 import 'package:intl/intl.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +12,8 @@ class DB {
   static Future<List<String>> getFormFromFirebase(FormBase form) async {
     var contentList = List<String>();
     //print('Fetching ${form.id} content with path ${form.contentPath}');
-    DocumentReference docRef = Firestore.instance.document(form.contentPath); //This is just a local var storing a reference
+    DocumentReference docRef =
+        Firestore.instance.document(form.contentPath); //This is just a local var storing a reference
     DocumentSnapshot doc = await docRef.get(source: Source.serverAndCache);
     contentList.add(doc.data['content']);
 
@@ -52,8 +54,8 @@ class DB {
     instance = await openDatabase(
       path,
       onCreate: (db, version) async {
-        await db
-            .execute("CREATE TABLE completedForms(id TEXT PRIMARY KEY, formName TEXT, longName TEXT, date TEXT, path TEXT)");
+        await db.execute(
+            "CREATE TABLE completedForms(id TEXT PRIMARY KEY, formName TEXT, longName TEXT, date TEXT, path TEXT)");
         await db.execute("CREATE TABLE userData(id INTEGER PRIMARY KEY, value TEXT)");
       },
       version: 1,
@@ -66,7 +68,7 @@ class DB {
         //This DOES store empty values as ''
         await instance.insert(
           'userData',
-          data.toMap(),
+          data.prepareForPersistence(), //form as map and encrypt data
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
@@ -106,13 +108,21 @@ class DB {
   }
 
   static Future<String> debugPrintDatabase() async {
+    List<Map<String, dynamic>> forms = await instance.query('completedForms');
+    String out = '${forms.length} completed forms exist in database.';
+
     final List<Map<String, dynamic>> userData = await instance.query('userData');
     var numNotEmpty = 0;
     userData.forEach((f) => f['value'] != '' ? numNotEmpty++ : numNotEmpty);
     var dataPercent = Util.getPercent(numNotEmpty, userData.length);
-    String out = '$numNotEmpty of ${userData.length} of user data points have values ($dataPercent%)';
-    List<Map<String, dynamic>> forms = await instance.query('completedForms');
-    out += '\n${forms.length} completed forms exist in database';
+    out += '\n$numNotEmpty of ${userData.length} of user data points have values ($dataPercent%)';
+
+    userData.forEach((d) {
+      String v = d['value'];
+      v = (v == null || v == '') ? v : Encryption.decrypt(v);
+      out += '\n${d['id']}: $v';
+    });
+
     print(out);
     return out;
   }

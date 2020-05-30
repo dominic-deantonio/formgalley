@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
-import 'package:formgalley/User/user.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/dataEngine.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
@@ -39,7 +38,6 @@ class _WelcomeViewState extends State<WelcomeView> {
         setState(() {
           formsMap = List.from(formData);
           loading = false;
-          print('loaded welcome');
         });
       });
     });
@@ -61,8 +59,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                 child: Icon(CupertinoIcons.info),
                 onPressed: () {
                   setState(() => loading = !loading);
-                  User.instance.printAllDataValues();
-                  DB.debugPrintDatabase();
                 },
               ),
               border: Border(),
@@ -111,14 +107,22 @@ class _WelcomeViewState extends State<WelcomeView> {
     );
 
     for (var map in formsMap) {
+      var reg = FormRegistry.instance.registeredForms;
+      bool existsInApp = reg.containsKey(map['formNum']); //If false, exists in firebase but not in app - need upgrade
+
       items.add(
         StandardButton(
           title: map['formNum'],
-          description: map['formName'],
+          subTitle: existsInApp ? map['formName'] : '(Update required) ${map['formName']}',
           allowWrap: false,
+          color: existsInApp ? null : Colors.grey[200],
           callback: () async {
-            var form = await DataEngine.getSelectedFormObject(map);
-            widget.onFormSelected(form);
+            if (existsInApp) {
+              var form = await DataEngine.getSelectedFormObject(map);
+              widget.onFormSelected(form);
+            } else {
+              print('Open the app store');
+            }
           }, //On tap
         ),
       );

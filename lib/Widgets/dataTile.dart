@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:async/async.dart';
@@ -9,9 +8,13 @@ import 'package:async/async.dart';
 class DataTile extends StatefulWidget {
   final Data data;
   String _userInput = ''; //Can't be final. Will need to set when changed
+  final ValueNotifier<List<Data>> changedDataNotifier;
   final ValueNotifier<Color> colorNotifier = ValueNotifier<Color>(Colors.white);
 
   String getUserInput() {
+    if (_userInput == '' && data.inputMethod == InputMethod.dropdown) {
+      _userInput = null;
+    }
     return _userInput;
   }
 
@@ -19,12 +22,26 @@ class DataTile extends StatefulWidget {
 
   DataTile({
     @required this.data,
+    @required this.changedDataNotifier,
   });
 
-  void updateTileColor() {
+  void updateTileChangedStatus() {
     String val = getUserInput();
     Color lightBlue = Color(0xffeff4ff);
     Color lightGreen = Color(0xffebffef);
+
+    List<Data> newList = List.from(changedDataNotifier.value);
+    if (val != data.getValue()) {
+      if (!changedDataNotifier.value.contains(data)) {
+        newList.add(data);
+        changedDataNotifier.value = newList;
+      }
+    } else {
+      if (changedDataNotifier.value.contains(data)) {
+        newList.remove(data);
+        changedDataNotifier.value = newList;
+      }
+    }
 
     if (val != null && val.length >= data.minRequiredChars) {
       //this should check the length
@@ -58,7 +75,7 @@ class _DataTileState extends State<DataTile> {
       widget.setUserInput(data.getValue());
       textController.text = widget.getUserInput();
     }
-    widget.updateTileColor();
+    widget.updateTileChangedStatus();
   }
 
   @override
@@ -134,7 +151,7 @@ class _DataTileState extends State<DataTile> {
               _cancellableOperation?.cancel();
               await _waitForReload(Util.waitMilliseconds(250));
               widget.setUserInput(value);
-              widget.updateTileColor();
+              widget.updateTileChangedStatus();
             },
           ),
         );
@@ -160,7 +177,7 @@ class _DataTileState extends State<DataTile> {
                     _cancellableOperation?.cancel();
                     await _waitForReload(Util.waitMilliseconds(250));
                     widget.setUserInput(value);
-                    widget.updateTileColor();
+                    widget.updateTileChangedStatus();
                   },
                 ),
               ),
@@ -169,7 +186,7 @@ class _DataTileState extends State<DataTile> {
         );
         break;
       case InputMethod.dropdown:
-        String selected = widget.getUserInput() == '' ? null : widget.getUserInput();
+        String selected = widget.getUserInput();
 
         if (Platform.isIOS) {
         } else {
@@ -203,7 +220,7 @@ class _DataTileState extends State<DataTile> {
                             widget.setUserInput(newValue);
                             selected = newValue;
                           });
-                          widget.updateTileColor(); //Can be outside because notifies parent. Must come after
+                          widget.updateTileChangedStatus(); //Can be outside because notifies parent. Must come after
                         },
                         isExpanded: true,
                       ),
@@ -214,9 +231,9 @@ class _DataTileState extends State<DataTile> {
                       ? SizedBox(width: 18)
                       : GestureDetector(
                           onTap: () {
-                            setState(() => widget.setUserInput(null));
+                            setState(() => widget.setUserInput(''));
                             selected = null;
-                            widget.updateTileColor();
+                            widget.updateTileChangedStatus();
                           },
                           child: Icon(
                             CupertinoIcons.clear_thick_circled,
@@ -276,7 +293,7 @@ class _DataTileState extends State<DataTile> {
                 onTap: () {
                   selectedDate = DateTime.now();
                   _processDate();
-                  widget.updateTileColor();
+                  widget.updateTileChangedStatus();
                 },
               ),
               Expanded(child: Container()),
@@ -287,7 +304,7 @@ class _DataTileState extends State<DataTile> {
                     : GestureDetector(
                         onTap: () {
                           setState(() => widget.setUserInput(''));
-                          widget.updateTileColor();
+                          widget.updateTileChangedStatus();
                         },
                         child: Icon(
                           CupertinoIcons.clear_thick_circled,
@@ -310,7 +327,7 @@ class _DataTileState extends State<DataTile> {
               );
             }
             if (selectedDate != null) _processDate();
-            widget.updateTileColor();
+            widget.updateTileChangedStatus();
           },
         );
 
