@@ -12,7 +12,7 @@ class FormBase {
   //This data does not make sense to keep long term
   Map<String, Data> tempData = {};
 
-  String id; //NO SPACES!!Should be something like DD214 - used to reference the db?
+  String formName; //NO SPACES!!Should be something like DD214 - used to reference the db?
   String longName; //Description of this form
   String content; //The html content that will be used to generate the form
   String contentPath; //The location of the content in the database
@@ -30,7 +30,7 @@ class FormBase {
   String getLongName() =>
       longName ??
       () {
-        print('ABOUT not set for $id');
+        print('ABOUT not set for $formName');
         return 'ABOUT not set';
       };
 

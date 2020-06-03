@@ -1,21 +1,23 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
 import 'package:formgalley/fileManager.dart';
 import 'package:formgalley/db.dart';
 
 class PdfEngine {
-  static Future<String> generatePdf(String html, FormBase form) async {
-    var generatedPdfFile;
+  static Future<CompletedForm> generatePdf(String html, FormBase formBase) async {
+    File generatedFile;
+    CompletedForm completedForm;
     const maxAttempts = 5;
     int attempt;
 
     for (attempt = 0; attempt < maxAttempts; attempt++) {
       try {
-        generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+        generatedFile = await FlutterHtmlToPdf.convertFromHtmlContent(
           html,
           await FileManager.getFilePath(),
-          FileManager.createFileName(form.id),
+          FileManager.createFileName(formBase.formName),
         ).timeout(const Duration(seconds: 3));
         break; //Success, leave the loop
       } on TimeoutException catch (e) {
@@ -27,10 +29,10 @@ class PdfEngine {
     print('Finished after attempt $attempt.');
 
     if (attempt >= maxAttempts) {
-      return 'timeout';
+      return null;
     } else {
-      await DB.saveFormDataLocalDb(form, generatedPdfFile.path);
-      return generatedPdfFile.path;
+      completedForm = await DB.saveFormDataLocalDb(formBase, generatedFile.path);
+      return completedForm;
     }
   }
 }

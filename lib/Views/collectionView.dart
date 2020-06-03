@@ -48,7 +48,7 @@ class _CollectionViewState extends State<CollectionView> {
       formToBuild = widget.selForm;
       dataObjects = List.from(DataEngine.getDataObjects(formToBuild));
       buildingForm = true;
-      pageName = formToBuild.id;
+      pageName = formToBuild.formName;
     }
   }
 

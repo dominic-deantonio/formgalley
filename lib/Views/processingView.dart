@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formgalley/db.dart';
@@ -6,9 +8,9 @@ import 'package:formgalley/pdfEngine.dart';
 
 class ProcessingView extends StatefulWidget {
   final FormBase formToBuild;
-  final Function(String) onViewPdf;
+  final Function(dynamic) viewPdfCallback;
 
-  ProcessingView({@required this.formToBuild, @required this.onViewPdf});
+  ProcessingView({@required this.formToBuild, @required this.viewPdfCallback});
 
   @override
   _ProcessingViewState createState() => new _ProcessingViewState();
@@ -17,7 +19,7 @@ class ProcessingView extends StatefulWidget {
 class _ProcessingViewState extends State<ProcessingView> {
   bool processing = true;
   String status = 'Downloading form content';
-  String location;
+  CompletedForm newPdf;
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class _ProcessingViewState extends State<ProcessingView> {
           setState(() => status = 'Generating PDF');
 
           PdfEngine.generatePdf(newHtml, widget.formToBuild).then((result) {
-            location = result;
+            newPdf = result;
             setState(() {
               status = 'Processing complete';
               processing = false;
@@ -59,7 +61,7 @@ class _ProcessingViewState extends State<ProcessingView> {
               : CupertinoButton(
                   child: Text('View PDF'),
                   onPressed: () async {
-                    widget.onViewPdf(location);
+                    widget.viewPdfCallback(newPdf);
                   },
                 ),
           Expanded(child: Container()),

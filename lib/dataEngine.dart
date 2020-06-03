@@ -35,7 +35,7 @@ class DataEngine {
   //Gets the data requirements from the forms.
   static List<Data> getDataObjects(FormBase form) {
     var dataRequirements = List<Data>();
-    dataRequirements.addAll(User.instance.getDataForForm(form.id));
+    dataRequirements.addAll(User.instance.getDataForForm(form.formName));
     dataRequirements.addAll(form.tempData.values.toList());
     return dataRequirements;
   }
@@ -63,7 +63,7 @@ class DataEngine {
     var newTempData = Map<String, Data>();
     for (Data data in dataObjects) {
       if (data.tempId != 'notTempData') {
-        data.usedInForms.contains(form.id) ? newTempData[data.tempId] = data : print('${data.title} not used in ${form.id}');
+        data.usedInForms.contains(form.formName) ? newTempData[data.tempId] = data : print('${data.title} not used in ${form.formName}');
       }
     }
     form.tempData = newTempData;

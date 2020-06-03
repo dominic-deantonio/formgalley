@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:formgalley/Forms/Base/completedForm.dart';
 import 'package:formgalley/fileManager.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:share_extend/share_extend.dart';
 
 //Make this a separate class file
 class PdfView extends StatefulWidget {
-  final pdf;
+  final CompletedForm pdf;
 
   PdfView({this.pdf});
 
@@ -25,13 +26,13 @@ class _PdfViewState extends State<PdfView> {
         backgroundColor: Colors.white,
         trailing: CupertinoButton(
           padding: EdgeInsets.all(0),
-          child: Platform.isIOS ? Icon(CupertinoIcons.share_solid) : Icon(Icons.share),
+          child: Platform.isIOS ? Icon(CupertinoIcons.share_solid) : Text('Send'),
           onPressed: () async => FileManager.sendFile(widget.pdf),
         ),
       ),
       child: Center(
         child: PdfViewer(
-          filePath: widget.pdf['path'],
+          filePath: widget.pdf.path,
         ),
       ),
     );

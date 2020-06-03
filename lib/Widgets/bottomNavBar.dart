@@ -6,7 +6,7 @@ class BottomNavBar extends StatefulWidget {
   static var items = [
     BottomNavigationBarItem(
       icon: Icon(Icons.person),
-      title: Text('Me'),
+      title: Text('Preferences'),
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.description),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class StandardButton extends StatefulWidget {
   final Function callback;
-  final Icon icon;
+  final Widget leading;
   final String title;
   final String subTitle;
   final bool allowWrap;
@@ -14,7 +14,7 @@ class StandardButton extends StatefulWidget {
     @required this.title,
     this.subTitle,
     this.callback,
-    this.icon,
+    this.leading,
     this.trailing,
     this.color,
     this.allowWrap = true,
@@ -44,8 +44,8 @@ class _StandardButtonState extends State<StandardButton> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        widget.icon ?? Container(),
-                        widget.icon == null ? Container() : SizedBox(width: 10),
+                        widget.leading ?? Container(),
+                        widget.leading == null ? Container() : SizedBox(width: 10),
                         Text(
                           widget.title ?? '',
                           style: TextStyle(fontSize: 17),

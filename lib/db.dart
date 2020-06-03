@@ -80,31 +80,43 @@ class DB {
     return maps;
   }
 
-  static Future<void> saveFormDataLocalDb(FormBase form, String path) async {
+  static Future<CompletedForm> saveFormDataLocalDb(FormBase form, String path) async {
     //formName TEXT PRIMARY KEY, longName TEXT, date TEXT, path TEXT
-
-    var date = DateFormat.yMMMd().format(DateTime.now()).toString();
-    await instance.query('completedForms');
     var dateFormat = DateFormat('yyyyMMddHHmmss');
-    var id = dateFormat.format(DateTime.now()).toString();
 
+    CompletedForm completed = CompletedForm(
+      id: dateFormat.format(DateTime.now()).toString(),
+      formName: form.formName,
+      longName: form.getLongName(),
+      dateCompleted: DateFormat.yMMMd().format(DateTime.now()).toString(),
+      path: path,
+    );
+
+    await instance.query('completedForms');
     await instance.insert(
       'completedForms',
-      {
-        'id': id,
-        'formName': form.id, //make a getter
-        'longName': form.getLongName(),
-        'date': date,
-        'path': path,
-      },
+      completed.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
+    return completed;
   }
 
-  static Future<List<Map<String, dynamic>>> getSavedFormsData() async {
+  static Future<List<CompletedForm>> getSavedFormsData() async {
     List<Map<String, dynamic>> maps = await instance.query('completedForms');
-    //print('Retrieved form data from local database');
-    return maps;
+    List<CompletedForm> completed = List<CompletedForm>();
+
+    maps.forEach((map) {
+      completed.add(CompletedForm(
+        id: map['id'],
+        formName: map['formName'],
+        longName: map['longName'],
+        dateCompleted: map['date'],
+        path: map['path'],
+      ));
+    });
+
+    return completed;
   }
 
   static Future<String> debugPrintDatabase() async {

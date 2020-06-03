@@ -33,7 +33,7 @@ class _WelcomeViewState extends State<WelcomeView> {
       if (!finishedOnboarding) widget.runOnboarding();
     });
     DB.getFormDataFromFirebase().then((formData) {
-      print('Got form data from database - begin simulated waiting');
+      print('Got form data from firebase - begin simulated waiting');
       Util.waitMilliseconds(0000).whenComplete(() {
         setState(() {
           formsMap = List.from(formData);

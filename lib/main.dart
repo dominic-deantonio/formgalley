@@ -4,6 +4,8 @@ import 'package:formgalley/Views/viewsExporter.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/db.dart';
 
+import 'Forms/Base/completedForm.dart';
+
 void main() => runApp(Main());
 
 class Main extends StatefulWidget {
@@ -28,7 +30,7 @@ class _MainState extends State<Main> {
     else {
       return CupertinoApp(
         home: SplashScreen(
-          onCompletedLoading: () async{
+          onCompletedLoading: () async {
             setState(() {
               _didInitialize = true;
             });
@@ -46,12 +48,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final tabController = CupertinoTabController(initialIndex: 1);
-  List<Map<String, dynamic>> finishedFormsData;
+  List<CompletedForm> completedForms;
 
   void updateFilesTab() async {
-    List<Map<String, dynamic>> f = List.from(await DB.getSavedFormsData());
-    setState(() => finishedFormsData = f);
-
+    var temp = await DB.getSavedFormsData();
+    setState(() => completedForms = temp);
+    print('Updated files tab');
   }
 
   @override
@@ -84,14 +86,14 @@ class _HomeState extends State<Home> {
               }
 
               Future<Widget> goToFullScreenReplacement(Widget view) async {
-                return await Navigator.of(context, rootNavigator: true)
-                    .pushReplacement(CupertinoPageRoute(fullscreenDialog: true, builder: (BuildContext context) => view));
+                return await Navigator.of(context, rootNavigator: true).pushReplacement(
+                    CupertinoPageRoute(fullscreenDialog: true, builder: (BuildContext context) => view));
               }
               //------End readability functions
 
               switch (i) {
                 case 0:
-                  return MeView(
+                  return PreferencesView(
                     navigateToMyInfo: () async {
                       await goToFullScreen(CollectionView());
                     },
@@ -99,7 +101,7 @@ class _HomeState extends State<Home> {
                   break;
                 case 1:
                   return WelcomeView(
-                    runOnboarding: (){
+                    runOnboarding: () {
                       goToFullScreen(OnboardingView());
                     },
                     onFormSelected: (formWithNoInput) async {
@@ -110,9 +112,9 @@ class _HomeState extends State<Home> {
                             await goToFullScreenReplacement(
                               ProcessingView(
                                 formToBuild: (formWithUserInput),
-                                onViewPdf: (path) async {
+                                viewPdfCallback: (pdf) async {
                                   await goToFullScreenReplacement(
-                                    PdfView(pdf: path),
+                                    PdfView(pdf: pdf),
                                   );
                                 },
                               ),
@@ -126,9 +128,9 @@ class _HomeState extends State<Home> {
                 case 2:
                   return FilesView(
                     //Must update this after generating new documents
+                    completedForms: completedForms,
                     openFileCallback: (pdf) => goToFullScreen(PdfView(pdf: pdf)),
                     updateFilesViewCallback: () => updateFilesTab(),
-                    files: finishedFormsData,
                   );
                   break;
                 default:

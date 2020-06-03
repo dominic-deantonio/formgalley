@@ -4,5 +4,5 @@ export 'welcomeView.dart';
 export 'filesView.dart';
 export 'processingView.dart';
 export 'pdfView.dart';
-export 'meView.dart';
+export 'preferencesView.dart';
 export 'onboardingView.dart';

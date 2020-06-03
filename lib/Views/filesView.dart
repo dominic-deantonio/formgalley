@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:formgalley/Forms/Base/completedForm.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/db.dart';
 import 'package:flutter/material.dart';
@@ -9,23 +10,32 @@ import 'package:share_extend/share_extend.dart';
 
 class FilesView extends StatefulWidget {
   final SlidableController slidableController = SlidableController();
-  final Function(Map<String, dynamic>) openFileCallback;
+  final Function(CompletedForm) openFileCallback;
   final Function() updateFilesViewCallback;
-  final List<Map<String, dynamic>> files;
+  final List<CompletedForm> completedForms;
 
-  FilesView({@required this.openFileCallback, this.files, this.updateFilesViewCallback});
+  FilesView({
+    @required this.openFileCallback,
+    this.completedForms,
+    this.updateFilesViewCallback,
+  });
 
   @override
   _FilesViewState createState() => new _FilesViewState();
 }
 
 class _FilesViewState extends State<FilesView> {
-  var files = List<Map<String, dynamic>>();
+  var forms = List<CompletedForm>();
   SlidableController controller = SlidableController();
 
   @override
+  void initState() {
+    super.initState();
+    forms = widget.completedForms.reversed.toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    files = widget.files.reversed.toList();
 
     return CupertinoPageScaffold(
       child: CupertinoScrollbar(
@@ -33,14 +43,14 @@ class _FilesViewState extends State<FilesView> {
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
               backgroundColor: Colors.white,
-              largeTitle: Text('${files.length < 1 ? '' : files.length} ${Util.plural(files.length, 'File', 'Files')}'),
+              largeTitle: Text('${forms.length < 1 ? '' : forms.length} ${Util.plural(forms.length, 'File', 'Files')}'),
               border: Border(),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int i) {
-                  Map<String, dynamic> f = files[i];
-                  DateTime d = Util.getDateFromStringStorageFormat(f['id']);
+                  CompletedForm f = forms[i];
+                  DateTime d = Util.getDateFromStringStorageFormat(f.id);
                   return Slidable(
                     dismissal: SlidableDismissal(
                       closeOnCanceled: true,
@@ -49,7 +59,7 @@ class _FilesViewState extends State<FilesView> {
                       onDismissed: ((type) => print('deleted')),
                       onWillDismiss: (type) async {
                         if (type == SlideActionType.primary) {
-                          ShareExtend.share(f['path'], "Send this file");
+                          ShareExtend.share(f.path, "Send this file");
                           //Currently unused because slide is not implemented
                           return false;
                         } else {
@@ -75,9 +85,9 @@ class _FilesViewState extends State<FilesView> {
                         child: IconSlideAction(
                           iconWidget: Icon(Icons.delete, color: Colors.red),
                           onTap: () async {
-                            await DB.deleteFromTable('completedForms', f['id']);
-                            await FileManager.deleteFromDirectory(f['path']);
-                            files.removeAt(i);
+                            await DB.deleteFromTable('completedForms', f.id);
+                            await FileManager.deleteFromDirectory(f.path);
+                            forms.removeAt(i);
                             controller.activeState.dismiss();
                             await Util.waitMilliseconds(1000);
                             widget.updateFilesViewCallback();
@@ -87,20 +97,20 @@ class _FilesViewState extends State<FilesView> {
                       ),
                     ],
                     child: StandardButton(
-                      title: f['formName'],
-                      subTitle: f['longName'],
+                      title: f.formName,
+                      subTitle: f.longName,
                       trailing: Util.getHowLongAgo(d),
                       callback: () => widget.openFileCallback(f),
                     ),
                   );
                 },
-                childCount: files.length,
+                childCount: forms.length,
               ),
             ),
             //If there are no files, inform the user.
             SliverList(
               delegate: SliverChildListDelegate(
-                files.length == 0
+                forms.length == 0
                     ? [
                         SizedBox(
                           height: 40,

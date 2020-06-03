@@ -11,7 +11,7 @@ class DD2558 extends FormBase {
   //Be sure to call the constructor here to run super constructor
 
   DD2558() {
-    id = 'DD 2558';
+    formName = 'DD 2558';
     longName = 'Authorization to Start, Stop or Change an Allotment'; //Redundant-either remove from FireStore or here
     contentPath = '/forms/dd2558/html/content';
   }

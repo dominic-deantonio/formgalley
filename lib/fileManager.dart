@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:formgalley/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
+
+import 'Forms/Base/completedForm.dart';
 
 class FileManager {
   static Future<String> getFilePath() async {
@@ -52,12 +55,12 @@ class FileManager {
     }
   }
 
-  static Future<void> sendFile(var f) async {
+  static Future<void> sendFile(CompletedForm f) async {
     ShareExtend.share(
-      f['path'],
+      f.path,
       'file',
-      sharePanelTitle: 'Send this ${f['formName']}',
-      subject: f['formName'],
+      sharePanelTitle: 'Send this ${f.formName}',
+      subject: '${f.formName} sent from ${Constants.kAppName}',
     );
   }
 }
