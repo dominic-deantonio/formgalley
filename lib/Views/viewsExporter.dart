@@ -1,4 +1,4 @@
-export 'splashScreen.dart';
+export 'splashView.dart';
 export 'collectionView.dart';
 export 'welcomeView.dart';
 export 'filesView.dart';
@@ -6,3 +6,4 @@ export 'processingView.dart';
 export 'pdfView.dart';
 export 'preferencesView.dart';
 export 'onboardingView.dart';
+export 'errorView.dart';

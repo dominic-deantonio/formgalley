@@ -20,26 +20,23 @@ class WelcomeView extends StatefulWidget {
 class _WelcomeViewState extends State<WelcomeView> {
   bool loading = true;
   var formsMap = List<Map<String, dynamic>>();
-  Image image1 =
-      Image.network('https://image.freepik.com/free-vector/hand-drawn-checklist-background_23-2148070711.jpg');
-  Image image2 = Image.network(
-      'https://image.freepik.com/free-vector/flat-design-thinking-character-with-elements-around_23-2148270055.jpg');
+  Image image1 = Image.asset('images/guyWithPencil.jpg', height: 230);
+  Image image2 = Image.asset('images/thinkingPerson.jpg', height: 230);
 
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((instance) {
-      bool finishedOnboarding = instance.getBool('finishedOnboarding') ?? false;
-      if (!finishedOnboarding) widget.runOnboarding();
-    });
-    DB.getFormDataFromFirebase().then((formData) {
-      print('Got form data from firebase - begin simulated waiting');
-      Util.waitMilliseconds(0000).whenComplete(() {
-        setState(() {
-          formsMap = List.from(formData);
-          loading = false;
-        });
-      });
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    var instance = await SharedPreferences.getInstance().timeout(Duration(seconds: 5));
+    bool finishedOnboarding = instance.getBool('finishedOnboarding') ?? false;
+    if (!finishedOnboarding) widget.runOnboarding();
+    var formData = await DB.getFormDataFromFirebase().timeout(Duration(seconds: 10));
+    setState(() {
+      formsMap = List.from(formData);
+      loading = false;
     });
   }
 
@@ -48,7 +45,6 @@ class _WelcomeViewState extends State<WelcomeView> {
     return CupertinoPageScaffold(
       child: CupertinoScrollbar(
         child: CustomScrollView(
-          physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
               backgroundColor: Colors.white,

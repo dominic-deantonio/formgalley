@@ -29,14 +29,9 @@ class _FilesViewState extends State<FilesView> {
   SlidableController controller = SlidableController();
 
   @override
-  void initState() {
-    super.initState();
-    forms = widget.completedForms.reversed.toList();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
+    forms = widget.completedForms.reversed.toList();
+    print('Rebuilt files view');
     return CupertinoPageScaffold(
       child: CupertinoScrollbar(
         child: CustomScrollView(
@@ -56,7 +51,7 @@ class _FilesViewState extends State<FilesView> {
                       closeOnCanceled: true,
                       dragDismissible: false,
                       child: SlidableDrawerDismissal(),
-                      onDismissed: ((type) => print('deleted')),
+                      onDismissed: ((type) => {}),
                       onWillDismiss: (type) async {
                         if (type == SlideActionType.primary) {
                           ShareExtend.share(f.path, "Send this file");
