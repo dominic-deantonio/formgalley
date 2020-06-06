@@ -33,7 +33,7 @@ class _SplashViewState extends State<SplashView> {
   Future<void> initialize() async {
     try {
       setState(() => status = 'Initializing local database');
-      await DB.initializeLocalDb().timeout(Duration(seconds: 0));
+      await DB.initializeLocalDb().timeout(Duration(seconds: 10));
       setState(() => status = 'Initializing encryption');
       await Encryption.initialize().timeout(Duration(seconds: 10));
       setState(() => status = 'Getting user data');
@@ -45,7 +45,7 @@ class _SplashViewState extends State<SplashView> {
       widget.onSuccessfulLoad();
       print('Initialized with no errors');
     } catch (e) {
-      widget.onException(e, 'initialize splash');
+      widget.onException(e, 'initializing splash');
     }
   }
 

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +10,7 @@ import 'package:formgalley/db.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/User/user.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
+import 'package:formgalley/dialogManager.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
 class CollectionView extends StatefulWidget {
@@ -86,17 +87,20 @@ class _CollectionViewState extends State<CollectionView> {
                         child: widget.selForm == null ? changedData.length > 0 ? Text('Save') : Text('') : Text('Next'),
                         onPressed: () async {
                           if (changedDataObjects.value.length > 0 || buildingForm) {
-                            await processInput(dataTiles);
-                            dataTiles.forEach((tile) => tile.updateTileChangedStatus());
+                            var connectivityResult = await Connectivity().checkConnectivity();
+                            if (connectivityResult != ConnectivityResult.none) {
+                              await processInput(dataTiles);
+                              dataTiles.forEach((tile) => tile.updateTileChangedStatus());
+                            } else {
+                              await DialogManager.alertUserNoConnection(context);
+                            }
                           }
                         },
                       );
                     }),
               ),
               SliverList(
-                delegate: SliverChildListDelegate(
-                  dataTiles,
-                ),
+                delegate: SliverChildListDelegate(dataTiles),
               )
             ],
           ),
@@ -134,45 +138,7 @@ class _CollectionViewState extends State<CollectionView> {
   Future<bool> onPop() async {
     bool didChange = changedDataObjects.value.length > 0;
     bool doClose = true;
-    if (didChange) doClose = await confirmClose();
+    if (didChange) doClose = await DialogManager.confirmClose(context);
     return doClose;
-  }
-
-  Future<bool> confirmClose() async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        if (Platform.isIOS) {
-          return CupertinoAlertDialog(
-            title: Text('Discard Changes?'),
-            actions: <Widget>[
-              CupertinoDialogAction(
-                child: Text('Cancel'),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-              CupertinoDialogAction(
-                child: Text('Discard', style: TextStyle(color: Colors.red)),
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          );
-        } else {
-          return AlertDialog(
-            title: Text('Discard Changes?'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-              FlatButton(
-                child: Text('Discard', style: TextStyle(color: Colors.red)),
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          );
-        }
-      },
-    );
   }
 }

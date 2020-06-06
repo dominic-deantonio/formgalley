@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
-import 'package:formgalley/connection.dart';
 import 'package:formgalley/db.dart';
 import 'package:formgalley/encryption.dart';
 
@@ -115,14 +114,6 @@ class _PreferencesViewState extends State<PreferencesView> {
                       DB.debugPrintDatabase();
                     },
                   ),
-                  StandardButton(
-                    leading: Icon(Icons.wifi),
-                    title: 'Check Connectivity',
-                    callback: () async {
-                      await Connection.check();
-                    },
-                  ),
-
                 ],
               ),
             )

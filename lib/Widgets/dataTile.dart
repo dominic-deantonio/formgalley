@@ -94,8 +94,8 @@ class _DataTileState extends State<DataTile> {
           child: Card(
             elevation: 0,
             child: AnimatedContainer(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: clr),
               duration: Duration(milliseconds: 250),
-              color: clr,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0, top: 10, right: 10),
                 child: Column(

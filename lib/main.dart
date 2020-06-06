@@ -57,8 +57,11 @@ class _HomeState extends State<Home> {
 
     if (!didInit) {
       return SplashView(
-        onSuccessfulLoad: () async => setState(() => didInit = true),
-        onException: (e, s) => goToFullScreenReplacement(ErrorView(e,s)),
+        onSuccessfulLoad: () async => setState(() {
+          didInit = true;
+          updateFilesTab();
+        }),
+        onException: (e, s) => goToFullScreenReplacement(ErrorView(e, s)),
       );
     } else {
       return CupertinoTabScaffold(
@@ -79,11 +82,11 @@ class _HomeState extends State<Home> {
                   case 0:
                     return PreferencesView(
                       navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
-//                      onException: (){};
                     );
                     break;
                   case 1:
                     return WelcomeView(
+                      onException: (e, s) => goToFullScreenReplacement(ErrorView(e, s)),
                       runOnboarding: () => goToFullScreen(OnboardingView()),
                       onFormSelected: (formWithNoInput) async {
                         await goToFullScreen(
@@ -92,6 +95,7 @@ class _HomeState extends State<Home> {
                             onStartProcessing: (formWithUserInput) async {
                               await goToFullScreenReplacement(
                                 ProcessingView(
+                                  onException: (e, s) => goToFullScreenReplacement(ErrorView(e, s)),
                                   formToBuild: (formWithUserInput),
                                   viewPdfCallback: (pdf) async {
                                     await goToFullScreenReplacement(

@@ -119,12 +119,7 @@ class _FilesViewState extends State<FilesView> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 200,
-                          child: Image.network(
-                            'https://image.freepik.com/free-vector/hand-drawn-checklist-background_23-2148070711.jpg',
-                          ),
-                        )
+                        FractionallySizedBox(widthFactor: .75, child: Image.asset('images/guyWithPencil.jpg'))
                       ]
                     : [],
               ),

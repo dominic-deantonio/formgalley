@@ -9,7 +9,7 @@ class PdfEngine {
   static Future<CompletedForm> generatePdf(String html, FormBase formBase) async {
     File generatedFile;
     CompletedForm completedForm;
-    const maxAttempts = 5;
+    const maxAttempts = 7;
     int attempt;
 
     for (attempt = 0; attempt < maxAttempts; attempt++) {
@@ -29,7 +29,7 @@ class PdfEngine {
     print('Finished after attempt $attempt.');
 
     if (attempt >= maxAttempts) {
-      return null;
+      throw Exception();
     } else {
       completedForm = await DB.saveFormDataLocalDb(formBase, generatedFile.path);
       return completedForm;

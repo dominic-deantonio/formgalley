@@ -10,8 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WelcomeView extends StatefulWidget {
   final Function(FormBase) onFormSelected;
   final Function runOnboarding;
+  final Function(Exception, String) onException;
 
-  WelcomeView({@required this.onFormSelected, @required this.runOnboarding});
+  WelcomeView({@required this.onFormSelected, @required this.runOnboarding, @required this.onException});
 
   @override
   _WelcomeViewState createState() => new _WelcomeViewState();
@@ -30,44 +31,52 @@ class _WelcomeViewState extends State<WelcomeView> {
   }
 
   Future<void> initialize() async {
-    var instance = await SharedPreferences.getInstance().timeout(Duration(seconds: 5));
-    bool finishedOnboarding = instance.getBool('finishedOnboarding') ?? false;
-    if (!finishedOnboarding) widget.runOnboarding();
-    var formData = await DB.getFormDataFromFirebase().timeout(Duration(seconds: 10));
-    setState(() {
-      formsMap = List.from(formData);
-      loading = false;
-    });
+    try {
+      var instance = await SharedPreferences.getInstance().timeout(Duration(seconds: 5));
+      bool finishedOnboarding = instance.getBool('finishedOnboarding') ?? false;
+      if (!finishedOnboarding) widget.runOnboarding();
+      var formData = await DB.getFormDataFromFirebase().timeout(Duration(seconds: 10));
+      setState(() {
+        formsMap = List.from(formData);
+        loading = false;
+      });
+    } catch (e) {
+      widget.onException(e, 'initialize welcome view');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: CupertinoScrollbar(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              backgroundColor: Colors.white,
-              largeTitle: const Text('Create'),
-              previousPageTitle: 'Something',
-              trailing: CupertinoButton(
-                padding: EdgeInsets.all(0),
-                child: Icon(CupertinoIcons.info),
-                onPressed: () {
-                  setState(() => loading = !loading);
-                },
+    try {
+      return CupertinoPageScaffold(
+        child: CupertinoScrollbar(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              CupertinoSliverNavigationBar(
+                backgroundColor: Colors.white,
+                largeTitle: const Text('Create'),
+                previousPageTitle: 'Something',
+                trailing: CupertinoButton(
+                  padding: EdgeInsets.all(0),
+                  child: Icon(CupertinoIcons.info),
+                  onPressed: () {
+                    setState(() => loading = !loading);
+                  },
+                ),
+                border: Border(),
               ),
-              border: Border(),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                loading ? getShimmerListItems() : getListItems(),
-              ),
-            )
-          ],
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  loading ? getShimmerListItems() : getListItems(),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      widget.onException(e, 'return welcome view');
+    }
   }
 
   List<Widget> getShimmerListItems() {
