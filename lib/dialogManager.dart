@@ -114,7 +114,7 @@ class DialogManager {
                 StandardButton(
                     leading: Icon(Icons.bug_report),
                     title: 'Bug Report',
-                    function: () async {
+                    onTap: () async {
                       String subj = 'Bug Report';
                       String body = 'Please enter a detailed message about the bug you found:';
                       await sendEmail(subj, body);
@@ -122,7 +122,7 @@ class DialogManager {
                 StandardButton(
                   leading: Icon(Icons.description),
                   title: 'Form Request',
-                  function: () async {
+                  onTap: () async {
                     String subj = 'Form Request';
                     String body = 'Please enter detailed information about the form you would like added - '
                         'including the form name and where it can be found:';
@@ -132,7 +132,7 @@ class DialogManager {
                 StandardButton(
                   leading: Icon(Icons.build),
                   title: 'Feature Request',
-                  function: () async {
+                  onTap: () async {
                     String subj = 'Feature Request';
                     String body = 'Please enter detailed information about the feature you would like added:';
                     await sendEmail(subj, body);
@@ -181,7 +181,7 @@ class _OptionsModalState extends State<OptionsModal> {
             StandardButton(
               leading: Icon(Icons.invert_colors),
               title: 'Dark Theme',
-              function: () => setState(() => Options.instance.useDarkTheme = !Options.instance.useDarkTheme),
+              onTap: () => setState(() => Options.instance.useDarkTheme = !Options.instance.useDarkTheme),
               superTrailing: Switch.adaptive(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: Options.instance.useDarkTheme,

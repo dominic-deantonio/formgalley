@@ -95,7 +95,6 @@ class _HomeState extends State<Home> {
                   case 0:
                     return PreferencesView(
                       navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
-                      navigateToOptions: () async => await goToFullScreen(OptionsView()),
                       openOptionsModal: () async => await openOptions(),
                       giveFeedback: () async => await sendFeedback(),
                     );

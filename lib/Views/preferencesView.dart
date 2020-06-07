@@ -4,18 +4,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
+import 'package:formgalley/constants.dart';
 import 'package:formgalley/encryption.dart';
+import 'package:package_info/package_info.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
 class PreferencesView extends StatefulWidget {
   final Function navigateToMyInfo;
-  final Function navigateToOptions;
   final Function giveFeedback;
   final Function openOptionsModal;
 
   PreferencesView({
     @required this.navigateToMyInfo,
-    @required this.navigateToOptions,
     @required this.giveFeedback,
     @required this.openOptionsModal,
   });
@@ -47,7 +47,7 @@ class _PreferencesViewState extends State<PreferencesView> {
               delegate: SliverChildListDelegate(
                 [
                   StandardButton(
-                    function: () => widget.navigateToMyInfo(),
+                    onTap: () => widget.navigateToMyInfo(),
                     title: 'My Info',
                     subTitle: msg,
                     leading: Icon(Icons.person),
@@ -56,37 +56,43 @@ class _PreferencesViewState extends State<PreferencesView> {
                     leading: checkingEncryption ? CupertinoActivityIndicator(radius: 12) : encryptionIcon,
                     title: 'Encryption',
                     subTitle: Encryption.getStatusMessage(),
-                    function: () async {
+                    onTap: () async {
                       setState(() => checkingEncryption = true);
                       await Util.waitMilliseconds(500); //Actually check the encryption in future update
                       setState(() => checkingEncryption = false);
                     },
                   ),
-                  StandardButton(
-                    leading: Icon(Icons.monetization_on, color: Colors.green,),
-                    title: 'Tip Jar',
-                    subTitle: 'If you\'d like to support the development of Formgalley further, or are just feeling extra nice.',
-                    function: () async {
-                      print('Open Tip Jar');
-                    },
-                  ),
+//                  StandardButton(
+//                    leading: Icon(Icons.monetization_on, color: Colors.green,),
+//                    title: 'Tip Jar',
+//                    subTitle: 'If you\'d like to support the development of Formgalley further, or are just feeling extra nice.',
+//                    function: () async {
+//                      print('Open Tip Jar');
+//                    },
+//                  ),
                   StandardButton(
                     leading: Icon(Icons.message),
                     title: 'Feedback',
                     subTitle: 'Found a bug? Need a form or feature? Drop us a line.',
-                    function: () => widget.giveFeedback(),
+                    onTap: () => widget.giveFeedback(),
                   ),
                   StandardButton(
-//                    callback: () => widget.navigateToOptions(),
-                    function: () => widget.openOptionsModal(),
+                    onTap: () => widget.openOptionsModal(),
                     title: 'Options',
                     leading: Icon(Icons.settings),
                   ),
                   StandardButton(
-                    leading: Icon(Icons.info),
-                    title: 'About',
-                    function: () => showAboutDialog(context: context),
-                  ),
+                      leading: Icon(Icons.info),
+                      title: 'About',
+                      onTap: () async {
+                        PackageInfo package = await PackageInfo.fromPlatform();
+                        showAboutDialog(
+                          context: context,
+                          applicationName: 'Formgalley',
+                          applicationVersion: package.version,
+                          applicationLegalese: Constants.kLegalese,
+                        );
+                      }),
 //                  StandardButton(
 //                    leading: Icon(CupertinoIcons.folder_solid),
 //                    title: 'Print Database',

@@ -95,7 +95,7 @@ class _FilesViewState extends State<FilesView> {
                       title: f.formName,
                       subTitle: f.longName,
                       trailing: Util.getHowLongAgo(d),
-                      function: () => widget.openFileCallback(f),
+                      onTap: () => widget.openFileCallback(f),
                     ),
                   );
                 },
