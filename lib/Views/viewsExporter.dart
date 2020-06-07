@@ -7,3 +7,4 @@ export 'pdfView.dart';
 export 'preferencesView.dart';
 export 'onboardingView.dart';
 export 'errorView.dart';
+export 'optionsView.dart';

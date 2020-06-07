@@ -2,21 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StandardButton extends StatefulWidget {
-  final Function callback;
+  final Function function;
   final Widget leading;
   final String title;
   final String subTitle;
   final bool allowWrap;
   final String trailing;
   final Color color;
+  final Widget superTrailing;
 
   StandardButton({
-    @required this.title,
+    this.title,
     this.subTitle,
-    this.callback,
+    this.function,
     this.leading,
     this.trailing,
     this.color,
+    this.superTrailing,
     this.allowWrap = true,
   });
 
@@ -30,7 +32,7 @@ class _StandardButtonState extends State<StandardButton> {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
       child: CupertinoButton(
-        onPressed: () => widget.callback != null ? widget.callback() : print('No callback given'),
+        onPressed: () => widget.function != null ? widget.function() : print('No callback given'),
         padding: EdgeInsets.all(0),
         child: Card(
           elevation: 0,
@@ -60,7 +62,7 @@ class _StandardButtonState extends State<StandardButton> {
                           widget.trailing ?? '',
                           style: TextStyle(color: Colors.grey, fontSize: 15),
                         ),
-                        Icon(
+                        widget.superTrailing ?? Icon(
                           CupertinoIcons.forward,
                           size: 12,
                           color: Colors.grey,

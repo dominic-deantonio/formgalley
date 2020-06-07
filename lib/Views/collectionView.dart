@@ -138,7 +138,7 @@ class _CollectionViewState extends State<CollectionView> {
   Future<bool> onPop() async {
     bool didChange = changedDataObjects.value.length > 0;
     bool doClose = true;
-    if (didChange) doClose = await DialogManager.confirmClose(context);
+    if (didChange) doClose = await DialogManager.confirmCloseCollectionView(context);
     return doClose;
   }
 }

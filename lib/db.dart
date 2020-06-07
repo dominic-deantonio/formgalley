@@ -11,9 +11,8 @@ import 'package:sqflite/sqflite.dart';
 class DB {
   static Future<List<String>> getFormFromFirebase(FormBase form) async {
     var contentList = List<String>();
-    //print('Fetching ${form.id} content with path ${form.contentPath}');
-    DocumentReference docRef =
-        Firestore.instance.document(form.contentPath); //This is just a local var storing a reference
+    print('Fetching ${form.formName} content from ${form.contentPath}');
+    DocumentReference docRef = Firestore.instance.document(form.contentPath); //Each form knows where its content is
     DocumentSnapshot doc = await docRef.get(source: Source.serverAndCache);
     contentList.add(doc.data['content']);
 
@@ -27,7 +26,7 @@ class DB {
 
     QuerySnapshot snapshot = await Firestore.instance.collection('forms').getDocuments(source: Source.serverAndCache);
 
-    //print('Form data is from cache: ${snapshot.metadata.isFromCache}');
+    print('Form data is from cache: ${snapshot.metadata.isFromCache}');
 
     List<DocumentSnapshot> docs = snapshot.documents;
 
@@ -54,8 +53,7 @@ class DB {
     instance = await openDatabase(
       path,
       onCreate: (db, version) async {
-        await db.execute(
-            "CREATE TABLE completedForms(id TEXT PRIMARY KEY, formName TEXT, longName TEXT, date TEXT, path TEXT)");
+        await db.execute("CREATE TABLE completedForms(id TEXT PRIMARY KEY, formName TEXT, longName TEXT, date TEXT, path TEXT)");
         await db.execute("CREATE TABLE userData(id INTEGER PRIMARY KEY, value TEXT)");
       },
       version: 1,

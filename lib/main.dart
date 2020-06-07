@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:formgalley/Views/viewsExporter.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/db.dart';
+import 'package:formgalley/dialogManager.dart';
 import 'Forms/Base/completedForm.dart';
 
 void main() => runApp(Main());
@@ -45,6 +46,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Future<Widget> goTo(Widget view) async {
+      return await Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => view));
+    }
+
     Future<Widget> goToFullScreen(Widget view) async {
       return await Navigator.of(context, rootNavigator: true)
           .push(CupertinoPageRoute(fullscreenDialog: true, builder: (BuildContext context) => view));
@@ -53,6 +58,14 @@ class _HomeState extends State<Home> {
     Future<Widget> goToFullScreenReplacement(Widget view) async {
       return await Navigator.of(context, rootNavigator: true)
           .pushReplacement(CupertinoPageRoute(fullscreenDialog: true, builder: (BuildContext context) => view));
+    }
+
+    Future<void> sendFeedback() async{
+      DialogManager.sendFeedback(context);
+    }
+
+    Future<void> openOptions() async{
+      DialogManager.openOptions(context);
     }
 
     if (!didInit) {
@@ -82,6 +95,9 @@ class _HomeState extends State<Home> {
                   case 0:
                     return PreferencesView(
                       navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
+                      navigateToOptions: () async => await goToFullScreen(OptionsView()),
+                      openOptionsModal: () async => await openOptions(),
+                      giveFeedback: () async => await sendFeedback(),
                     );
                     break;
                   case 1:

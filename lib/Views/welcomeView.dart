@@ -121,7 +121,7 @@ class _WelcomeViewState extends State<WelcomeView> {
           subTitle: existsInApp ? map['formName'] : '(Update required) ${map['formName']}',
           allowWrap: false,
           color: existsInApp ? null : Colors.grey[200],
-          callback: () async {
+          function: () async {
             if (existsInApp) {
               var form = await DataEngine.getSelectedFormObject(map);
               widget.onFormSelected(form);
