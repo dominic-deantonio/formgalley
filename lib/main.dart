@@ -5,6 +5,7 @@ import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/db.dart';
 import 'package:formgalley/dialogManager.dart';
 import 'Forms/Base/completedForm.dart';
+import 'package:formgalley/log.dart';
 
 void main() => runApp(Main());
 
@@ -38,6 +39,12 @@ class _HomeState extends State<Home> {
 
   final tabController = CupertinoTabController(initialIndex: 1);
   List<CompletedForm> completedForms;
+
+  @override
+  void initState() {
+    super.initState();
+    Log.start();
+  }
 
   void updateFilesTab() async {
     var temp = await DB.getSavedFormsData();

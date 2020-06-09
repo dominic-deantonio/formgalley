@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:formgalley/User/data.dart';
+import 'package:formgalley/Utilities/formatters.dart';
 import 'package:formgalley/encryption.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:formgalley/Utilities/util.dart';
@@ -68,10 +69,7 @@ class User {
     prompt: 'Your first name.',
     usedInForms: ['DD 2558'],
     minRequiredChars: 2,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(35),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z. '-]")),
-    ],
+    inputFormatters: Formatters.name,
   );
 
   Data middleName = Data(
@@ -81,10 +79,7 @@ class User {
     prompt: 'Your middle name. Leave blank if none.',
     usedInForms: ['DD 2558'],
     minRequiredChars: 1,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(35),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z \'\-]")),
-    ],
+    inputFormatters: Formatters.name,
   );
 
   Data lastName = Data(
@@ -94,10 +89,7 @@ class User {
     prompt: 'Your last name.',
     usedInForms: ['DD 2558'],
     minRequiredChars: 2,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(35),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z. \'\-]")),
-    ],
+    inputFormatters: Formatters.name,
   );
 
   Data birthDate = Data(
@@ -138,10 +130,7 @@ class User {
     usedInForms: ['DD 2558'],
     prompt: 'The unformatted 10-digit number found on the back of your DOD ID (CAC).',
     textInputType: TextInputType.number,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(10),
-      WhitelistingTextInputFormatter(RegExp(r"[0-9]")),
-    ],
+    inputFormatters: Formatters.numeric(10),
   );
 
   Data milPayGrade = Data(
@@ -151,10 +140,7 @@ class User {
     usedInForms: ['DD 2558'],
     minRequiredChars: 3,
     prompt: 'Your pay grade, e.g., E-1, O-5, CWO-2.',
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(6),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z0-9\-]")),
-    ],
+    inputFormatters: Formatters.payGrade,
   );
 
   Data streetAddress = Data(
@@ -164,10 +150,7 @@ class User {
     prompt: 'Your residential street name and number.',
     minRequiredChars: 6,
     usedInForms: ['DD 2558'],
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(35),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z0-9 ,.-]")),
-    ],
+    inputFormatters: Formatters.streetAddress,
   );
 
   Data addressApartment = Data(
@@ -177,10 +160,7 @@ class User {
     prompt: 'Your apartment or unit number. Include the prefix \'Unit\' or \'Apt.\'',
     minRequiredChars: 1,
     usedInForms: ['DD 2558'],
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(15),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z0-9 \,\.\-]")),
-    ],
+    inputFormatters: Formatters.apartment,
   );
 
   Data addressCity = Data(
@@ -190,10 +170,7 @@ class User {
     prompt: 'Your city of residence.',
     minRequiredChars: 2,
     usedInForms: ['DD 2558'],
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(25),
-      WhitelistingTextInputFormatter(RegExp(r"[A-z0-9 ]")),
-    ],
+    inputFormatters: Formatters.city,
   );
 
   Data addressState = Data(
@@ -216,10 +193,7 @@ class User {
     prompt: 'Your 5-digit ZIP code with or without the 4-digit extension.',
     usedInForms: ['DD 2558'],
     textInputType: TextInputType.number,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(10),
-      WhitelistingTextInputFormatter(RegExp(r"[0-9\-]")),
-    ],
+    inputFormatters: Formatters.zip,
   );
 
   Data personalPhone = Data(
@@ -230,10 +204,7 @@ class User {
     prompt: 'Your unformatted 10-digit U.S. phone number.',
     usedInForms: ['DD 2558'],
     textInputType: TextInputType.number,
-    inputFormatters: [
-      LengthLimitingTextInputFormatter(10),
-      WhitelistingTextInputFormatter(RegExp(r"[0-9]")),
-    ],
+    inputFormatters: Formatters.phone,
   );
 
   //Helper methods-----------------------
@@ -261,6 +232,5 @@ class User {
     return out;
   }
 
-  int get ageInYears =>
-      birthDate.value != null ? (DateTime.now().difference(birthDate.value).inDays / 365).floor() : '';
+  int get ageInYears => birthDate.value != null ? (DateTime.now().difference(birthDate.value).inDays / 365).floor() : '';
 }

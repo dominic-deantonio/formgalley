@@ -56,13 +56,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                 backgroundColor: Colors.white,
                 largeTitle: const Text('Create'),
                 previousPageTitle: 'Something',
-                trailing: CupertinoButton(
-                  padding: EdgeInsets.all(0),
-                  child: Icon(CupertinoIcons.info),
-                  onPressed: () {
-                    setState(() => loading = !loading);
-                  },
-                ),
                 border: Border(),
               ),
               SliverList(

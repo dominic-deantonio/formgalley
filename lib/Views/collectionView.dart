@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +73,7 @@ class _CollectionViewState extends State<CollectionView> {
                     child: buildingForm ? Text('Cancel') : Text('Done'),
                     onPressed: () async {
                       bool b = await onPop();
-                      if (b) Navigator.pop(context);
+                      if (b ?? false) Navigator.pop(context);
                     }),
                 trailing: ValueListenableBuilder(
                     valueListenable: changedDataObjects,

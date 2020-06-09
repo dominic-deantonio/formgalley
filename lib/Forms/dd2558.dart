@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/User/user.dart';
+import 'package:formgalley/Utilities/formatters.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:us_states/us_states.dart';
 
@@ -34,10 +35,7 @@ class DD2558 extends FormBase {
       prompt: 'The amount of the allotment. Use precise commas and decimals.',
       usedInForms: ['DD 2558'],
       inputMethod: InputMethod.currency,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(30),
-        WhitelistingTextInputFormatter(RegExp(r'^[0-9\.\,]*$')),
-      ],
+      inputFormatters: Formatters.currency,
       textInputType: TextInputType.number,
     );
 
@@ -47,20 +45,14 @@ class DD2558 extends FormBase {
       minRequiredChars: 2,
       prompt: 'The allottee\'s first name.',
       usedInForms: ['DD 2558'],
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(35),
-        WhitelistingTextInputFormatter(RegExp(r"[A-z. '-]")),
-      ],
+      inputFormatters: Formatters.name,
     );
     tempData['allotteeMiddle'] = Data(
       hintText: 'M',
       title: 'Allottee\'s middle initial',
       prompt: 'The allottee\'s middle initial. Leave blank if none.',
       usedInForms: ['DD 2558'],
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(1),
-        WhitelistingTextInputFormatter(RegExp(r'^[A-z]*$')),
-      ],
+      inputFormatters: Formatters.name,
     );
     tempData['allotteeLast'] = Data(
       hintText: 'Smith',
@@ -68,10 +60,7 @@ class DD2558 extends FormBase {
       minRequiredChars: 2,
       prompt: 'The allottee\'s last name.',
       usedInForms: ['DD 2558'],
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(35),
-        WhitelistingTextInputFormatter(RegExp(r"[A-z. '-]")),
-      ],
+      inputFormatters: Formatters.name,
     );
     tempData['allotmentAction'] = Data(
       //Make sure to always select an actual value for default
