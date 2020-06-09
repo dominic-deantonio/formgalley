@@ -27,7 +27,7 @@ class _ProcessingViewState extends State<ProcessingView> {
   }
 
   Future<void> initialize() async {
-        try {
+    try {
       List<String> formHTML = await DB.getFormFromFirebase(widget.formToBuild).timeout(Duration(seconds: 10));
       setState(() => status = 'Assigning data');
       await widget.formToBuild.assignData().timeout(Duration(seconds: 10));

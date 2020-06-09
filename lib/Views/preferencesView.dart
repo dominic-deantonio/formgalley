@@ -6,6 +6,7 @@ import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/constants.dart';
 import 'package:formgalley/encryption.dart';
+import 'package:formgalley/fileManager.dart';
 import 'package:package_info/package_info.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
@@ -73,7 +74,7 @@ class _PreferencesViewState extends State<PreferencesView> {
                   StandardButton(
                     leading: Icon(Icons.message),
                     title: 'Feedback',
-                    subTitle: 'Found a bug? Need a form or feature? Drop us a line.',
+                    subTitle: 'Found a bug? Need a form or feature? Drop a line.',
                     onTap: () => widget.giveFeedback(),
                   ),
                   StandardButton(
@@ -96,10 +97,24 @@ class _PreferencesViewState extends State<PreferencesView> {
 //                  StandardButton(
 //                    leading: Icon(CupertinoIcons.folder_solid),
 //                    title: 'Print Database',
-//                    callback: () async {
+//                    onTap: () async {
 //                      DB.debugPrintDatabase();
 //                    },
 //                  ),
+                  Row(
+                    children: <Widget>[
+                      StandardButton(
+                        leading: Icon(CupertinoIcons.folder_solid),
+                        title: 'Print Log',
+                        onTap: () async => print('Log Output:\n${await FileManager.readLog()}'),
+                      ),
+                      StandardButton(
+                        leading: Icon(CupertinoIcons.folder_solid),
+                        title: 'Clear Log',
+                        onTap: () => FileManager.clearLog(),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             )

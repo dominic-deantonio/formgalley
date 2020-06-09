@@ -160,6 +160,8 @@ class DialogManager {
       },
     );
   }
+
+
 }
 
 class OptionsModal extends StatefulWidget {
@@ -188,8 +190,6 @@ class _OptionsModalState extends State<OptionsModal> {
                 onChanged: (d) => setState(() => Options.instance.useDarkTheme = !Options.instance.useDarkTheme),
               ),
             ),
-//            StandardButton(title: 'An Option'),
-//            StandardButton(title: 'An Option'),
           ],
         ),
       ),

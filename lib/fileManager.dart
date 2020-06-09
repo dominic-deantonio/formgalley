@@ -63,4 +63,30 @@ class FileManager {
       subject: '${f.formName} sent from ${Constants.kAppName}',
     );
   }
+
+  //--------------------Logging
+  static Future<void> writeToLog(String s) async {
+    var path = await getFilePath();
+    File log = File('$path/log.txt');
+    await log.writeAsString(
+      '$s\n',
+      mode: FileMode.append,
+    );
+  }
+
+  static Future<void> clearLog() async {
+    var path = await getFilePath();
+    File log = File('$path/log.txt');
+    await log.writeAsString(
+      '',
+      mode: FileMode.write,
+    );
+  }
+
+  static Future<String> readLog() async {
+    var path = await getFilePath();
+    File log = File('$path/log.txt');
+    String out = await log.readAsString();
+    return out;
+  }
 }
