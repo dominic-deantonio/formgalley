@@ -65,7 +65,6 @@ class _CollectionViewState extends State<CollectionView> {
             //Init all tiles - stop overwrite DB with null. Stops unnecessary build. Do make bigger later
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
-                backgroundColor: Colors.white,
                 largeTitle: Text(pageName),
                 border: Border(),
                 leading: CupertinoButton(

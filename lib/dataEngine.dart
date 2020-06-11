@@ -17,7 +17,7 @@ class DataEngine {
       out = reg[formNum];
       await Log.write('Found $formNum in registry.');
     } else {
-      print(await Log.write('$formNum not found in registry.'));
+      await Log.write('$formNum not found in registry.');
     }
     return out;
   }
@@ -27,18 +27,19 @@ class DataEngine {
     var dataRequirements = List<Data>();
     dataRequirements.addAll(User.instance.getDataForForm(form.formName));
     dataRequirements.addAll(form.tempData.values.toList());
-    Log.write('Providing ${dataRequirements.length} data objects for this form (log is not async).');
+    Log.write('Found ${dataRequirements.length} data objects for ${form.formName}.');
     return dataRequirements;
   }
 
   static Future<void> applyNewDataToUserData(List<Data> dataObjects) async {
     int numPersist = 0;
     for (var data in dataObjects) {
-      if (data.tempId == 'notTempData')
+      if (data.tempId == 'notTempData') {
         User.instance.userData.forEach((entry) => entry.title == data.title ? entry = data : null);
-      numPersist++;
+        numPersist++;
+      }
     }
-    await Log.write('Sent $numPersist of ${dataObjects.length} data objects to the user object.');
+    await Log.write('Sent $numPersist of ${dataObjects.length} data to the user.');
   }
 
   /// Applies user input to the data objects in the collection view
@@ -48,6 +49,7 @@ class DataEngine {
       //Run the values through a sanitizer first right here.
       dataObjects[i].setValue(tile.getUserInput());
     }
+    await Log.write('Applied input to data objects.');
   }
 
   /// Applies data objects from collection view to the FormBase non-persistent data objects (Re-matches the temp data).
@@ -61,7 +63,7 @@ class DataEngine {
       }
     }
     form.tempData = newTempData;
-    await Log.write('matched the temp data for ${form.formName} back to the tempData map');
+    await Log.write('Matched the temp data for ${form.formName} back to the form');
     return form;
   }
 }

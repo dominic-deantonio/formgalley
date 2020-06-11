@@ -4,6 +4,7 @@ import 'package:formgalley/Views/viewsExporter.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/db.dart';
 import 'package:formgalley/dialogManager.dart';
+import 'package:formgalley/options.dart';
 import 'Forms/Base/completedForm.dart';
 import 'package:formgalley/log.dart';
 
@@ -15,6 +16,20 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  CupertinoThemeData theme;
+
+  @override
+  void initState() {
+    super.initState();
+    updateTheme(Options.instance.getCurrentTheme());
+  }
+
+  void updateTheme(CupertinoThemeData opposite) {
+    setState(() {
+      theme = opposite;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
@@ -23,12 +38,17 @@ class _MainState extends State<Main> {
         DefaultWidgetsLocalizations.delegate,
         DefaultCupertinoLocalizations.delegate,
       ],
-      home: Home(),
+      home: Home(updateTheme: (opposite) => updateTheme(opposite)),
+      theme: theme,
     );
   }
 }
 
 class Home extends StatefulWidget {
+  final Function(CupertinoThemeData) updateTheme;
+
+  Home({this.updateTheme});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -67,12 +87,15 @@ class _HomeState extends State<Home> {
           .pushReplacement(CupertinoPageRoute(fullscreenDialog: true, builder: (BuildContext context) => view));
     }
 
-    Future<void> sendFeedback() async{
+    Future<void> sendFeedback() async {
       DialogManager.sendFeedback(context);
     }
 
-    Future<void> openOptions() async{
-      DialogManager.openOptions(context);
+    Future<void> openOptions() async {
+      DialogManager.openOptions(
+        context: context,
+        updateTheme: (opposite) => widget.updateTheme(opposite),
+      );
     }
 
     if (!didInit) {
@@ -89,7 +112,6 @@ class _HomeState extends State<Home> {
         tabBar: CupertinoTabBar(
           items: BottomNavBar.items,
           border: Border(),
-          backgroundColor: Colors.white,
           onTap: (tab) {
             if (tab == 2) updateFilesTab();
           },
@@ -104,6 +126,7 @@ class _HomeState extends State<Home> {
                       navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
                       openOptionsModal: () async => await openOptions(),
                       giveFeedback: () async => await sendFeedback(),
+                      viewLog: () async => await goToFullScreen(LogView()),
                     );
                     break;
                   case 1:

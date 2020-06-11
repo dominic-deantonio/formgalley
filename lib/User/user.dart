@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/Utilities/formatters.dart';
 import 'package:formgalley/encryption.dart';
+import 'package:formgalley/log.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:us_states/us_states.dart';
@@ -30,6 +31,7 @@ class User {
       addressZip,
       personalPhone
     ];
+    Log.write('Initialized user.');
   }
 
   //Class methods
@@ -46,8 +48,6 @@ class User {
   }
 
   Future<void> loadUserDataToInstance(List<Map<String, dynamic>> maps) async {
-    //print('Assigning user data: ');
-
     for (var map in maps) {
       var key = map['id'];
       var val = map['value']; //these values can be brought in as null - check with encryption
@@ -59,6 +59,7 @@ class User {
         }
       }
     }
+    Log.write('Assigned local data to user.');
   }
 
   //Data fields--------------------------------------

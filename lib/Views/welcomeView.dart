@@ -53,7 +53,6 @@ class _WelcomeViewState extends State<WelcomeView> {
           child: CustomScrollView(
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
-                backgroundColor: Colors.white,
                 largeTitle: const Text('Create'),
                 previousPageTitle: 'Something',
                 border: Border(),

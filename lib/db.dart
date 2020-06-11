@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:formgalley/User/data.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:formgalley/log.dart';
 
 class DB {
   ///Gets the HTML content from firebase
@@ -17,7 +18,7 @@ class DB {
     DocumentReference docRef = Firestore.instance.document(form.contentPath); //Each form knows where its content is
     DocumentSnapshot doc = await docRef.get(source: Source.serverAndCache);
     contentList.add(doc.data['content']);
-    await Log.write('Fetched ${form.formName} content from backend. Content is from cache: ${doc.metadata.isFromCache}');
+    await Log.write('Fetched ${form.formName} content. Content is from ${doc.metadata.isFromCache ? 'cache' : 'server'}.');
     return contentList;
   }
 
@@ -28,8 +29,6 @@ class DB {
 
     QuerySnapshot snapshot = await Firestore.instance.collection('forms').getDocuments(source: Source.serverAndCache);
 
-    print('Form data is from cache: ${snapshot.metadata.isFromCache}');
-    Log.write('Populating form selections. Data is from cache: ${snapshot.metadata.isFromCache}');
 
     List<DocumentSnapshot> docs = snapshot.documents;
 
@@ -40,6 +39,7 @@ class DB {
       formMap.add(current.data);
     }
 
+    await Log.write('Fetched available forms. Data is from ${snapshot.metadata.isFromCache? 'cache' : 'server'}');
     return formMap;
   }
 

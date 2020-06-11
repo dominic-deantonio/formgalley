@@ -37,7 +37,6 @@ class _FilesViewState extends State<FilesView> {
         child: CustomScrollView(
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
-              backgroundColor: Colors.white,
               largeTitle: Text('${forms.length < 1 ? '' : forms.length} ${Util.plural(forms.length, 'File', 'Files')}'),
               border: Border(),
             ),

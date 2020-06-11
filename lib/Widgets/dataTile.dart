@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:async/async.dart';
+import 'package:formgalley/options.dart';
 
 class DataTile extends StatefulWidget {
   final Data data;
@@ -27,8 +28,8 @@ class DataTile extends StatefulWidget {
 
   void updateTileChangedStatus() {
     String val = getUserInput();
-    Color lightBlue = Color(0xffeff4ff);
-    Color lightGreen = Color(0xffebffef);
+    Color lightBlue = Options.instance.getCurrentTheme().primaryColor;
+    Color lightGreen = CupertinoColors.systemGreen;
 
     List<Data> newList = List.from(changedDataNotifier.value);
     if (val != data.getValue()) {
@@ -51,7 +52,7 @@ class DataTile extends StatefulWidget {
         colorNotifier.value = lightGreen;
       }
     } else {
-      colorNotifier.value = Colors.grey[100];
+      colorNotifier.value = Options.instance.getCurrentTheme().primaryContrastingColor;
     }
   }
 
@@ -90,9 +91,8 @@ class _DataTileState extends State<DataTile> {
       valueListenable: widget.colorNotifier,
       builder: (BuildContext context, Color clr, Widget child) {
         return Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8),
-          child: Card(
-            elevation: 0,
+          padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 9),
+          child: Container(
             child: AnimatedContainer(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: clr),
               duration: Duration(milliseconds: 250),
@@ -113,7 +113,7 @@ class _DataTileState extends State<DataTile> {
                       padding: const EdgeInsets.only(right: 10.0),
                       child: Text(
                         data.prompt,
-                        style: TextStyle(fontSize: 15, color: Colors.grey),
+                        style: TextStyle(fontSize: 15),
                       ),
                     ),
                     SizedBox(

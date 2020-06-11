@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
-import 'package:formgalley/dataEngine.dart';
-import 'package:formgalley/db.dart';
-import 'package:formgalley/User/data.dart';
-import 'package:formgalley/User/user.dart';
-import 'package:formgalley/Forms/Base/formExport.dart';
+import 'package:formgalley/log.dart';
 import 'package:formgalley/options.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +18,7 @@ class DialogManager {
     String title = 'No Internet';
     String option = 'Ok';
 
+    await Log.write('Alerted user of no network connection');
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -47,6 +44,7 @@ class DialogManager {
   }
 
   static Future<bool> confirmCloseCollectionView(BuildContext context) async {
+    await Log.write('Asked user to confirm discarding changes in collection view.');
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -92,8 +90,10 @@ class DialogManager {
       } catch (e) {
         print('Failed to send email');
       }
+      await Log.write('Launched email for feedback flow.');
     }
 
+    await Log.write('Displayed send feedback modal.');
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -146,8 +146,10 @@ class DialogManager {
     );
   }
 
-  static Future<void> openOptions(BuildContext context) async {
+  static Future<void> openOptions({BuildContext context, Function(CupertinoThemeData) updateTheme}) async {
+    await Log.write('Displayed options modal.');
     showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
@@ -156,15 +158,17 @@ class DialogManager {
       ),
       context: context,
       builder: (BuildContext context) {
-        return OptionsModal();
+        return OptionsModal(updateTheme: (opposite) => updateTheme(opposite));
       },
     );
   }
-
-
 }
 
 class OptionsModal extends StatefulWidget {
+  final Function(CupertinoThemeData) updateTheme;
+
+  OptionsModal({this.updateTheme});
+
   @override
   _OptionsModalState createState() => _OptionsModalState();
 }
@@ -174,20 +178,55 @@ class _OptionsModalState extends State<OptionsModal> {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            GestureDetector(
+              onTap: () => widget.updateTheme(Options.instance.switchTheme()),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Options.instance.getCurrentTheme().primaryContrastingColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.brightness_6),
+                          SizedBox(width: 10,),
+                          Text('Dark Mode', style: Options.instance.getCurrentTheme().textTheme.textStyle,),
+                        ],
+                      ),
+                      Switch.adaptive(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        value: Options.instance.useDarkTheme,
+                        onChanged: (d) {
+                          widget.updateTheme(Options.instance.switchTheme());
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             StandardButton(
-              leading: Icon(Icons.invert_colors),
+              leading: Icon(Icons.brightness_6),
               title: 'Dark Theme',
-              onTap: () => setState(() => Options.instance.useDarkTheme = !Options.instance.useDarkTheme),
+              onTap: () {
+                widget.updateTheme(Options.instance.switchTheme());
+              },
               superTrailing: Switch.adaptive(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: Options.instance.useDarkTheme,
-                onChanged: (d) => setState(() => Options.instance.useDarkTheme = !Options.instance.useDarkTheme),
+                onChanged: (d) {
+                  widget.updateTheme(Options.instance.switchTheme());
+                },
               ),
             ),
           ],

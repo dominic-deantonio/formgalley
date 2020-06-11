@@ -88,8 +88,8 @@ class _SplashViewState extends State<SplashView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'No Internet Connection\n\nFormgalley needs to connect to check'
-            '\nfor new forms and other updates.',
+            'No Internet Connection\n\nFormgalley needs to connect to the network'
+            '\nto check for new forms and other updates.',
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 100),

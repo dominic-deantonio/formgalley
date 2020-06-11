@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:formgalley/constants.dart';
+import 'package:formgalley/log.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
@@ -33,6 +34,7 @@ class FileManager {
       }
     }
 
+    await Log.write('Retrieved ${pdfs.length} files from system.');
     return pdfs;
   }
 
@@ -45,12 +47,13 @@ class FileManager {
 
   static Future<bool> deleteFromDirectory(String path) async {
     FileSystemEntity file = File(path);
+
     try {
       await file.delete();
-      print('Deleted $path from the directory');
+      await Log.write('Deleted file from directory.');
       return true;
     } catch (err) {
-      print('Failed to delete $path from directory');
+      await Log.write('Failed to delete file from directory.');
       return false;
     }
   }
@@ -62,25 +65,22 @@ class FileManager {
       sharePanelTitle: 'Send this ${f.formName}',
       subject: '${f.formName} sent from ${Constants.kAppName}',
     );
+    await Log.write('Sent ${f.formName} using share panel');
   }
 
   //--------------------Logging
   static Future<void> writeToLog(String s) async {
     var path = await getFilePath();
     File log = File('$path/log.txt');
-    await log.writeAsString(
-      '$s\n',
-      mode: FileMode.append,
-    );
+    String entries = await log.readAsString();
+
+    await log.writeAsString('$s\n' + entries);
   }
 
   static Future<void> clearLog() async {
     var path = await getFilePath();
     File log = File('$path/log.txt');
-    await log.writeAsString(
-      '',
-      mode: FileMode.write,
-    );
+    await log.writeAsString('');
   }
 
   static Future<String> readLog() async {

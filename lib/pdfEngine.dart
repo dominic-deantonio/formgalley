@@ -8,7 +8,7 @@ import 'package:formgalley/log.dart';
 
 class PdfEngine {
   static Future<CompletedForm> generatePdf(String html, FormBase formBase) async {
-    await Log.write('Starting pdf generation.');
+    await Log.write('Started pdf generation.');
     File generatedFile;
     CompletedForm completedForm;
     const maxAttempts = 7;

@@ -1,5 +1,6 @@
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:formgalley/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Encryption {
@@ -39,7 +40,7 @@ class Encryption {
     } else {
       result = 'Retrieved an encryption key from secure storage with no issues.';
     }
-
+    await Log.write('Initialized security protocols.');
     return result;
   }
 
@@ -89,6 +90,7 @@ class Encryption {
 
   static String goodStatus = 'Ready. Your data will be stored on this device using 256-bit encryption.';
 
+  //TODO strengthen this check
   static String getStatusMessage() {
     if (key != null) {
       return goodStatus;

@@ -14,11 +14,13 @@ class PreferencesView extends StatefulWidget {
   final Function navigateToMyInfo;
   final Function giveFeedback;
   final Function openOptionsModal;
+  final Function viewLog;
 
   PreferencesView({
     @required this.navigateToMyInfo,
     @required this.giveFeedback,
     @required this.openOptionsModal,
+    this.viewLog,
   });
 
   @override
@@ -31,6 +33,7 @@ class _PreferencesViewState extends State<PreferencesView> {
 
   Widget encryptionIcon = Icon(Icons.lock);
   bool checkingEncryption = false;
+  String encryptionStatus = Encryption.getStatusMessage();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class _PreferencesViewState extends State<PreferencesView> {
           physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
-              backgroundColor: Colors.white,
+//              backgroundColor: Colors.white,
               largeTitle: Text('Preferences'),
               border: Border(),
             ),
@@ -56,11 +59,15 @@ class _PreferencesViewState extends State<PreferencesView> {
                   StandardButton(
                     leading: checkingEncryption ? CupertinoActivityIndicator(radius: 12) : encryptionIcon,
                     title: 'Encryption',
-                    subTitle: Encryption.getStatusMessage(),
+                    subTitle: encryptionStatus,
                     onTap: () async {
                       setState(() => checkingEncryption = true);
                       await Util.waitMilliseconds(500); //Actually check the encryption in future update
-                      setState(() => checkingEncryption = false);
+                      String status = Encryption.getStatusMessage();
+                      setState(() {
+                        checkingEncryption = false;
+                        encryptionStatus = status;
+                      });
                     },
                   ),
 //                  StandardButton(
@@ -74,7 +81,7 @@ class _PreferencesViewState extends State<PreferencesView> {
                   StandardButton(
                     leading: Icon(Icons.message),
                     title: 'Feedback',
-                    subTitle: 'Found a bug? Need a form or feature? Drop a line.',
+                    subTitle: 'Found a bug? Want a form or feature? Drop a line.',
                     onTap: () => widget.giveFeedback(),
                   ),
                   StandardButton(
@@ -101,20 +108,13 @@ class _PreferencesViewState extends State<PreferencesView> {
 //                      DB.debugPrintDatabase();
 //                    },
 //                  ),
-                  Row(
-                    children: <Widget>[
-                      StandardButton(
-                        leading: Icon(CupertinoIcons.folder_solid),
-                        title: 'Print Log',
-                        onTap: () async => print('Log Output:\n${await FileManager.readLog()}'),
-                      ),
-                      StandardButton(
-                        leading: Icon(CupertinoIcons.folder_solid),
-                        title: 'Clear Log',
-                        onTap: () => FileManager.clearLog(),
-                      ),
-                    ],
-                  ),
+//                  StandardButton(
+//                    leading: Icon(CupertinoIcons.folder_solid),
+//                    title: 'View Log',
+//                    onTap: () async {
+//                      widget.viewLog();
+//                    },
+//                  ),
                 ],
               ),
             )
