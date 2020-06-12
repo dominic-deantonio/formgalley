@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/dataEngine.dart';
 import 'package:formgalley/db.dart';
@@ -10,6 +11,7 @@ import 'package:formgalley/User/data.dart';
 import 'package:formgalley/User/user.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
 import 'package:formgalley/dialogManager.dart';
+
 
 //Displays the prompts when getting information from the user needed for the form creation
 class CollectionView extends StatefulWidget {
@@ -23,6 +25,7 @@ class CollectionView extends StatefulWidget {
 }
 
 class _CollectionViewState extends State<CollectionView> {
+  final SlidableController controller = SlidableController();
   FormBase formToBuild;
   List<Data> dataObjects;
   bool buildingForm = false;
@@ -79,7 +82,6 @@ class _CollectionViewState extends State<CollectionView> {
                     builder: (BuildContext context, List<Data> changedData, child) {
                       int i = changedData.length;
                       print('$i item(s) pending changes ${i > 0 ? '(${changedData.last.title})' : ''}');
-
                       return CupertinoButton(
                         padding: EdgeInsets.all(0),
                         child: widget.selForm == null ? changedData.length > 0 ? Text('Save') : Text('') : Text('Next'),
@@ -117,6 +119,39 @@ class _CollectionViewState extends State<CollectionView> {
     });
     return items;
   }
+
+//  List<Dismissible> getDismissibles(List<DataTile> tiles, SlidableController controller) {
+//    var items = List<Dismissible>();
+//    tiles.forEach(
+//      (tile) {
+//        items.add(
+//          Dismissible(
+//            key: UniqueKey(),
+//            child: tile,
+//            confirmDismiss: (f) async {
+//              tile.userInputNotifier.value = '';
+//              tile.updateTileChangedStatus();
+//              return false;
+//            },
+//            dismissThresholds: {DismissDirection.startToEnd: 2},
+//            background: Container(),
+//            secondaryBackground: Padding(
+//              padding: const EdgeInsets.only(right: 10),
+//              child: Align(
+//                alignment: Alignment.centerRight,
+//                child: Icon(
+//                  Icons.clear,
+//                  color: Colors.red,
+//                  size: 35,
+//                ),
+//              ),
+//            ),
+//          ),
+//        );
+//      },
+//    );
+//    return items;
+//  }
 
   Future<void> processInput(List<DataTile> dataTiles) async {
     //Run the save data methods here

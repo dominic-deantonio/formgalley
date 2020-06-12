@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:formgalley/log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Options {
   static final Options instance = Options._privateConstructor();
@@ -13,22 +15,26 @@ class Options {
 
   CupertinoThemeData darkTheme = CupertinoThemeData(
     brightness: Brightness.dark,
-    barBackgroundColor: const Color(0xff000000),
+    barBackgroundColor: Colors.black, //Allows for transparency
     scaffoldBackgroundColor: const Color(0xff000000),
     primaryContrastingColor: Colors.grey[900],
     textTheme: CupertinoTextThemeData(
       textStyle: TextStyle(color: Colors.white),
-      actionTextStyle: TextStyle(color: Colors.red),
-      dateTimePickerTextStyle: TextStyle(color: Colors.purple),
-      navActionTextStyle: TextStyle(color: Colors.orange),
-
+      actionTextStyle: TextStyle(color: Colors.white),
+      dateTimePickerTextStyle: TextStyle(color: Colors.white),
+      pickerTextStyle: TextStyle(color: Colors.white),
     ),
   );
 
   CupertinoThemeData lightTheme = CupertinoThemeData(
     barBackgroundColor: Colors.grey[100],
     scaffoldBackgroundColor: Colors.grey[100],
-    textTheme: CupertinoTextThemeData(textStyle: TextStyle(color: Colors.white)),
+    textTheme: CupertinoTextThemeData(
+      actionTextStyle: TextStyle(color: Colors.black),
+      textStyle: TextStyle(color: Colors.white),
+      dateTimePickerTextStyle: TextStyle(color: Colors.white),
+      pickerTextStyle: TextStyle(color: Colors.white),
+    ),
   );
 
   CupertinoThemeData getCurrentTheme() {
@@ -41,9 +47,15 @@ class Options {
 
   CupertinoThemeData switchTheme() {
     Options.instance.useDarkTheme = !Options.instance.useDarkTheme;
+    SystemChrome.setSystemUIOverlayStyle(Options.instance.useDarkTheme ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+
     Log.write('Switched theme to ${Options.instance.useDarkTheme ? 'dark' : 'light'}.');
     return getCurrentTheme();
   }
 
-  bool useDarkTheme = true;
+  Future<void> saveOptions() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  }
+
+  bool useDarkTheme = false;
 }

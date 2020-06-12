@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -192,15 +191,23 @@ class _OptionsModalState extends State<OptionsModal> {
                   color: Options.instance.getCurrentTheme().primaryContrastingColor,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
                           Icon(Icons.brightness_6),
-                          SizedBox(width: 10,),
-                          Text('Dark Mode', style: Options.instance.getCurrentTheme().textTheme.textStyle,),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Dark Mode',
+                            style: TextStyle(
+                              color: Options.instance.getCurrentTheme().textTheme.actionTextStyle.color,
+                              fontSize: 17,
+                            ),
+                          ),
                         ],
                       ),
                       Switch.adaptive(
@@ -213,20 +220,6 @@ class _OptionsModalState extends State<OptionsModal> {
                     ],
                   ),
                 ),
-              ),
-            ),
-            StandardButton(
-              leading: Icon(Icons.brightness_6),
-              title: 'Dark Theme',
-              onTap: () {
-                widget.updateTheme(Options.instance.switchTheme());
-              },
-              superTrailing: Switch.adaptive(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: Options.instance.useDarkTheme,
-                onChanged: (d) {
-                  widget.updateTheme(Options.instance.switchTheme());
-                },
               ),
             ),
           ],

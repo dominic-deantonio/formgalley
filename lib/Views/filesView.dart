@@ -66,8 +66,9 @@ class _FilesViewState extends State<FilesView> {
                     key: UniqueKey(),
                     actions: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(left: 25.0),
+                        padding: const EdgeInsets.only(left: 15.0),
                         child: IconSlideAction(
+                          color: Colors.transparent,
                           iconWidget: Icon(Icons.send),
                           onTap: () => FileManager.sendFile(f),
                         ),
@@ -75,8 +76,9 @@ class _FilesViewState extends State<FilesView> {
                     ],
                     secondaryActions: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(right: 25.0),
+                        padding: const EdgeInsets.only(right: 15.0),
                         child: IconSlideAction(
+                          color: Colors.transparent,
                           iconWidget: Icon(Icons.delete, color: Colors.red),
                           onTap: () async {
                             await DB.deleteFromTable('completedForms', f.id);

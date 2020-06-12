@@ -27,7 +27,6 @@ dependencies:
   sqflite:
   path:
   us_states: ^1.0.3
-  mock_data: ^1.2.6
   pdf_viewer_plugin: ^1.0.0+2
   path_provider: ^1.6.5
   share_extend: ^1.1.3

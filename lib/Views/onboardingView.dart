@@ -58,23 +58,19 @@ class _OnboardingViewState extends State<OnboardingView> {
                   page(
                     msg: 'Welcome to Formgalley!',
                     sub: 'Generate forms on the go',
-                    color: Colors.red,
                   ),
                   page(
                     msg: 'We\'ll handle the boring part',
                     sub: 'Use your saved data to quickly create new forms',
-                    color: Colors.green,
                   ),
                   page(
                     msg: 'Privacy is Paramount',
                     sub: 'Personal data is encrypted and never transmitted over a network',
-                    color: Colors.blue,
                   ),
                   page(
                     msg: 'Get notified when new forms are added',
                     sub: 'Enable notifications to get instant access to new forms',
                     onPressed: () => print('Clicked the notifications button'),
-                    color: Colors.yellow,
                   ),
                 ],
               ),
@@ -101,7 +97,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     );
   }
 
-  Widget page({String msg, String sub, Color color, Function onPressed}) {
+  Widget page({String msg, String sub, Function onPressed}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

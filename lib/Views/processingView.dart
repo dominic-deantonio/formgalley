@@ -55,7 +55,7 @@ class _ProcessingViewState extends State<ProcessingView> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
         border: Border(),
-        backgroundColor: Colors.white,
+//        backgroundColor: Colors.white,
       ),
       child: Column(
         children: <Widget>[

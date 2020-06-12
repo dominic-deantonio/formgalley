@@ -51,7 +51,10 @@ class _StandardButtonState extends State<StandardButton> {
                       widget.leading == null ? Container() : SizedBox(width: 10),
                       Text(
                         widget.title ?? '',
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Options.instance.getCurrentTheme().textTheme.actionTextStyle.color,
+                        ),
                         softWrap: false,
                         overflow: TextOverflow.fade,
                       ),

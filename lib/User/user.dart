@@ -5,7 +5,6 @@ import 'package:formgalley/User/data.dart';
 import 'package:formgalley/Utilities/formatters.dart';
 import 'package:formgalley/encryption.dart';
 import 'package:formgalley/log.dart';
-import 'package:mock_data/mock_data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:us_states/us_states.dart';
 
@@ -65,7 +64,7 @@ class User {
   //Data fields--------------------------------------
   Data firstName = Data(
     databaseId: 101,
-    hintText: mockName(),
+    hintText: 'First',
     title: 'First name',
     prompt: 'Your first name.',
     usedInForms: ['DD 2558'],
@@ -75,7 +74,7 @@ class User {
 
   Data middleName = Data(
     databaseId: 103,
-    hintText: mockName(),
+    hintText: 'Middle',
     title: 'Middle name',
     prompt: 'Your middle name. Leave blank if none.',
     usedInForms: ['DD 2558'],

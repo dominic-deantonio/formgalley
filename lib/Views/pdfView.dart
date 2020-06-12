@@ -23,7 +23,6 @@ class _PdfViewState extends State<PdfView> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         border: Border(),
-        backgroundColor: Colors.white,
         trailing: CupertinoButton(
           padding: EdgeInsets.all(0),
           child: Platform.isIOS ? Icon(CupertinoIcons.share_solid) : Text('Send'),

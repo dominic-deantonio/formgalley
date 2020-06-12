@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:formgalley/User/data.dart';
 import 'package:formgalley/Utilities/util.dart';
 import 'package:async/async.dart';
@@ -8,18 +9,18 @@ import 'package:formgalley/options.dart';
 
 class DataTile extends StatefulWidget {
   final Data data;
-  String _userInput = ''; //Can't be final. Will need to set when changed
+  final ValueNotifier<String> userInputNotifier = ValueNotifier<String>(''); //Can't be final. Will need to set when changed
   final ValueNotifier<List<Data>> changedDataNotifier;
   final ValueNotifier<Color> colorNotifier = ValueNotifier<Color>(Colors.white);
 
   String getUserInput() {
-    if (_userInput == '' && data.inputMethod == InputMethod.dropdown) {
-      _userInput = null;
+    if (userInputNotifier.value == '' && data.inputMethod == InputMethod.dropdown) {
+      userInputNotifier.value = null;
     }
-    return _userInput;
+    return userInputNotifier.value;
   }
 
-  String setUserInput(String input) => _userInput = input;
+  String setUserInput(String input) => userInputNotifier.value = input;
 
   DataTile({
     @required this.data,
@@ -52,7 +53,7 @@ class DataTile extends StatefulWidget {
         colorNotifier.value = lightGreen;
       }
     } else {
-      colorNotifier.value = Options.instance.getCurrentTheme().primaryContrastingColor;
+      colorNotifier.value = Colors.grey[900];
     }
   }
 
@@ -63,19 +64,31 @@ class DataTile extends StatefulWidget {
 class _DataTileState extends State<DataTile> {
   Data data;
   TextEditingController textController = TextEditingController();
-  int rebuildTimer; //Stop the onchanged from rebuilding too much
+  int rebuildTimer; //Stop the onChanged from rebuilding too much
   CancelableOperation _cancellableOperation;
 
   @override
   void initState() {
     super.initState();
+    initialize();
+  }
+
+  void initialize() {
     data = widget.data;
 
     //Sets the initial field value if data pulled something from db.
     if (data.getValue() != null && data.getValue() != '') {
       widget.setUserInput(data.getValue());
-      textController.text = widget.getUserInput();
+      textController.text = widget.userInputNotifier.value;
     }
+    widget.updateTileChangedStatus();
+  }
+
+  void clear() {
+    setState(() {
+      widget.setUserInput('');
+      textController.text = widget.userInputNotifier.value;
+    });
     widget.updateTileChangedStatus();
   }
 
@@ -92,35 +105,58 @@ class _DataTileState extends State<DataTile> {
       builder: (BuildContext context, Color clr, Widget child) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 9),
-          child: Container(
-            child: AnimatedContainer(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: clr),
-              duration: Duration(milliseconds: 250),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 10, right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      data.title,
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: _buildInput(context),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: Text(
-                        data.prompt,
-                        style: TextStyle(fontSize: 15),
+          child: AnimatedContainer(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: clr),
+            duration: Duration(milliseconds: 250),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    data.title,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: _buildInput(context),
+                        ),
                       ),
+                      ValueListenableBuilder(
+                        valueListenable: widget.userInputNotifier,
+                        builder: (BuildContext context, String input, Widget child) {
+                          if (input == null || input == '') {
+                            return Container();
+                          } else {
+                            return GestureDetector(
+                              onTap: () {
+                                clear();
+                              },
+                              child: Icon(CupertinoIcons.clear_thick, color: Colors.red),
+                            );
+//                            return GestureDetector(
+//                              child: Icon(CupertinoIcons.clear_thick, color: Colors.red),
+//                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      data.prompt,
+                      style: TextStyle(fontSize: 15),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
             ),
           ),
@@ -132,7 +168,7 @@ class _DataTileState extends State<DataTile> {
   Widget _buildInput(BuildContext context) {
     //If editing or if displaying a value, allow clearing the value
     OverlayVisibilityMode showClearButton = OverlayVisibilityMode.editing;
-    if (widget.getUserInput() != '') showClearButton = OverlayVisibilityMode.always;
+    if (widget.userInputNotifier.value != '') showClearButton = OverlayVisibilityMode.always;
 
     switch (data.inputMethod) {
       case InputMethod.text:
@@ -140,11 +176,10 @@ class _DataTileState extends State<DataTile> {
           padding: const EdgeInsets.only(right: 10.0),
           child: CupertinoTextField(
             keyboardType: data.textInputType,
-            clearButtonMode: showClearButton,
             placeholder: data.hintText.toString(),
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 15),
-            decoration: null,
+            decoration: BoxDecoration(),
             inputFormatters: data.inputFormatters,
             controller: textController,
             onChanged: (value) async {
@@ -189,6 +224,7 @@ class _DataTileState extends State<DataTile> {
         String selected = widget.getUserInput();
 
         if (Platform.isIOS) {
+          return Text("Not implemented yet");
         } else {
           return Material(
             color: Colors.transparent,
@@ -201,9 +237,16 @@ class _DataTileState extends State<DataTile> {
                       child: DropdownButton(
                         //https://github.com/flutter/flutter/issues/9211#issuecomment-532806508
                         isDense: true,
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                        dropdownColor: Colors.white,
-                        hint: Text('Select...'),
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Options.instance.getCurrentTheme().textTheme.actionTextStyle.color,
+                        ),
+                        dropdownColor: Options.instance.getCurrentTheme().scaffoldBackgroundColor,
+                        iconEnabledColor: Colors.white,
+                        hint: Text(
+                          'Select...',
+                          style: Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle,
+                        ),
                         value: selected,
                         items: Util.createDropdownMenuItems(data.dropdownOptions),
                         selectedItemBuilder: (BuildContext context) {
@@ -212,6 +255,7 @@ class _DataTileState extends State<DataTile> {
                               item,
                               overflow: TextOverflow.fade,
                               softWrap: false,
+                              style: TextStyle(color: Options.instance.getCurrentTheme().textTheme.textStyle.color),
                             );
                           }).toList();
                         },
@@ -226,21 +270,6 @@ class _DataTileState extends State<DataTile> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 30),
-                  selected == null
-                      ? SizedBox(width: 18)
-                      : GestureDetector(
-                          onTap: () {
-                            setState(() => widget.setUserInput(''));
-                            selected = null;
-                            widget.updateTileChangedStatus();
-                          },
-                          child: Icon(
-                            CupertinoIcons.clear_thick_circled,
-                            size: 18,
-                            color: Colors.grey[700],
-                          ),
-                        ),
                 ],
               ),
             ),
@@ -249,7 +278,7 @@ class _DataTileState extends State<DataTile> {
         break;
       case InputMethod.date:
         DateTime selectedDate;
-        String displayValue = widget._userInput;
+        String displayValue = widget.userInputNotifier.value;
         DateTime initialDate = DateTime.now();
         TextStyle style;
 
@@ -262,17 +291,11 @@ class _DataTileState extends State<DataTile> {
 
         if (displayValue == '') {
           displayValue = 'Select...';
-          style = TextStyle(
-            fontSize: 15,
-            color: Colors.grey[400],
-          );
+          style = Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle;
         } else {
-          initialDate = Util.getDateFromStringStorageFormat(widget._userInput);
+          initialDate = Util.getDateFromStringStorageFormat(widget.userInputNotifier.value);
           displayValue = Util.formatDisplayDate(initialDate);
-          style = TextStyle(
-            fontSize: 15,
-            color: Colors.black,
-          );
+          style = Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle;
         }
 
         return GestureDetector(
@@ -282,13 +305,16 @@ class _DataTileState extends State<DataTile> {
               SizedBox(width: 195, child: Text(displayValue, style: style)),
               Icon(
                 Icons.arrow_drop_down,
-                color: Colors.grey[800],
+                color: Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle.color,
               ),
               SizedBox(width: 15),
               GestureDetector(
-                child: Text(
-                  ' Today',
-                  style: TextStyle(fontSize: 15, color: Theme.of(context).primaryColorDark),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    ' Today',
+                    style: Options.instance.getCurrentTheme().textTheme.textStyle,
+                  ),
                 ),
                 onTap: () {
                   selectedDate = DateTime.now();
@@ -297,22 +323,6 @@ class _DataTileState extends State<DataTile> {
                 },
               ),
               Expanded(child: Container()),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.5),
-                child: widget.getUserInput() == ''
-                    ? Container()
-                    : GestureDetector(
-                        onTap: () {
-                          setState(() => widget.setUserInput(''));
-                          widget.updateTileChangedStatus();
-                        },
-                        child: Icon(
-                          CupertinoIcons.clear_thick_circled,
-                          size: 18,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-              ),
             ],
           ),
           onTap: () async {
