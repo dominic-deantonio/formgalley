@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:formgalley/User/data.dart';
@@ -66,6 +67,7 @@ class _DataTileState extends State<DataTile> {
   TextEditingController textController = TextEditingController();
   int rebuildTimer; //Stop the onChanged from rebuilding too much
   CancelableOperation _cancellableOperation;
+  final Color kWhite = Colors.white;
 
   @override
   void initState() {
@@ -115,7 +117,7 @@ class _DataTileState extends State<DataTile> {
                 children: <Widget>[
                   Text(
                     data.title,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: kWhite),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +152,7 @@ class _DataTileState extends State<DataTile> {
                     padding: const EdgeInsets.only(right: 10.0),
                     child: Text(
                       data.prompt,
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: kWhite),
                     ),
                   ),
                   SizedBox(
@@ -178,7 +180,7 @@ class _DataTileState extends State<DataTile> {
             keyboardType: data.textInputType,
             placeholder: data.hintText.toString(),
             textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 15, color: kWhite),
             decoration: BoxDecoration(),
             inputFormatters: data.inputFormatters,
             controller: textController,
@@ -192,21 +194,19 @@ class _DataTileState extends State<DataTile> {
         );
         break;
       case InputMethod.currency:
-        TextEditingController controller;
         return Padding(
           padding: const EdgeInsets.only(right: 10.0),
           child: Row(
             children: <Widget>[
-              Text('\$', style: TextStyle(fontSize: 15)),
+              Text('\$', style: TextStyle(fontSize: 15, color: kWhite)),
               Expanded(
                 child: CupertinoTextField(
                   keyboardType: data.textInputType,
-                  clearButtonMode: showClearButton,
                   placeholder: data.hintText.toString(),
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15, color: kWhite),
                   decoration: null,
-                  controller: controller,
+                  controller: textController,
                   inputFormatters: data.inputFormatters,
                   onSubmitted: (value) async {
                     _cancellableOperation?.cancel();
@@ -239,13 +239,13 @@ class _DataTileState extends State<DataTile> {
                         isDense: true,
                         style: TextStyle(
                           fontSize: 15,
-                          color: Options.instance.getCurrentTheme().textTheme.actionTextStyle.color,
+                          color: Options.instance.useDarkTheme ? kWhite: Colors.black,
                         ),
                         dropdownColor: Options.instance.getCurrentTheme().scaffoldBackgroundColor,
                         iconEnabledColor: Colors.white,
                         hint: Text(
                           'Select...',
-                          style: Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle,
+                          style: TextStyle(color: Colors.grey[300]),
                         ),
                         value: selected,
                         items: Util.createDropdownMenuItems(data.dropdownOptions),
@@ -255,7 +255,7 @@ class _DataTileState extends State<DataTile> {
                               item,
                               overflow: TextOverflow.fade,
                               softWrap: false,
-                              style: TextStyle(color: Options.instance.getCurrentTheme().textTheme.textStyle.color),
+                              style: TextStyle(color: kWhite),
                             );
                           }).toList();
                         },
@@ -280,7 +280,6 @@ class _DataTileState extends State<DataTile> {
         DateTime selectedDate;
         String displayValue = widget.userInputNotifier.value;
         DateTime initialDate = DateTime.now();
-        TextStyle style;
 
         void _processDate() {
           widget.setUserInput(Util.getStringStorageFormatFromDate(selectedDate));
@@ -291,21 +290,19 @@ class _DataTileState extends State<DataTile> {
 
         if (displayValue == '') {
           displayValue = 'Select...';
-          style = Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle;
         } else {
           initialDate = Util.getDateFromStringStorageFormat(widget.userInputNotifier.value);
           displayValue = Util.formatDisplayDate(initialDate);
-          style = Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle;
         }
 
         return GestureDetector(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              SizedBox(width: 195, child: Text(displayValue, style: style)),
+              SizedBox(width: 195, child: Text(displayValue, style: TextStyle(color: kWhite, fontSize: 15))),
               Icon(
                 Icons.arrow_drop_down,
-                color: Options.instance.getCurrentTheme().textTheme.dateTimePickerTextStyle.color,
+                color: kWhite,
               ),
               SizedBox(width: 15),
               GestureDetector(
@@ -313,7 +310,7 @@ class _DataTileState extends State<DataTile> {
                   padding: const EdgeInsets.all(5.0),
                   child: Text(
                     ' Today',
-                    style: Options.instance.getCurrentTheme().textTheme.textStyle,
+                    style: TextStyle(color: kWhite, fontSize: 15),
                   ),
                 ),
                 onTap: () {

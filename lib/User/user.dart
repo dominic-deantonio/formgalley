@@ -84,7 +84,7 @@ class User {
 
   Data lastName = Data(
     databaseId: 102,
-    hintText: 'Formson',
+    hintText: 'Last name',
     title: 'Last name',
     prompt: 'Your last name.',
     usedInForms: ['DD 2558'],

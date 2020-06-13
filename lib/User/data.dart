@@ -50,7 +50,7 @@ class Data {
     return x.toString();
   }
 
-  String getPrintValue() {
+  String getDisplayValue() {
     var x = value ?? '';
     return x.toString();
   }
@@ -61,6 +61,14 @@ class Data {
       'id': databaseId,
       'value': (v == '' || v == null) ? v : Encryption.encrypt(v), //can't encrypt nothing or null
     };
+  }
+
+  bool isAdequate(String s){
+    if(s.length >= minRequiredChars){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   void setValue(var val) {

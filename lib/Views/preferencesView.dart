@@ -8,6 +8,7 @@ import 'package:formgalley/constants.dart';
 import 'package:formgalley/encryption.dart';
 import 'package:formgalley/fileManager.dart';
 import 'package:package_info/package_info.dart';
+import 'viewsExporter.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
 class PreferencesView extends StatefulWidget {
@@ -90,17 +91,18 @@ class _PreferencesViewState extends State<PreferencesView> {
                     leading: Icon(Icons.settings),
                   ),
                   StandardButton(
-                      leading: Icon(Icons.info),
-                      title: 'About',
-                      onTap: () async {
-                        PackageInfo package = await PackageInfo.fromPlatform();
-                        showAboutDialog(
-                          context: context,
-                          applicationName: 'Formgalley',
-                          applicationVersion: package.version,
-                          applicationLegalese: Constants.kLegalese,
-                        );
-                      }),
+                    leading: Icon(Icons.info),
+                    title: 'About',
+                    onTap: () async {
+                      PackageInfo package = await PackageInfo.fromPlatform();
+                      showAboutDialog(
+                        context: context,
+                        applicationName: 'Formgalley',
+                        applicationVersion: package.version,
+                        applicationLegalese: Constants.kLegalese,
+                      );
+                    },
+                  ),
 //                  StandardButton(
 //                    leading: Icon(CupertinoIcons.folder_solid),
 //                    title: 'Print Database',
@@ -115,6 +117,13 @@ class _PreferencesViewState extends State<PreferencesView> {
 //                      widget.viewLog();
 //                    },
 //                  ),
+                  StandardButton(
+                    leading: Icon(CupertinoIcons.folder_solid),
+                    title: 'Test',
+                    onTap: () {
+                      Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => TestView()));
+                    },
+                  ),
                 ],
               ),
             )

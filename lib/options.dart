@@ -18,23 +18,12 @@ class Options {
     barBackgroundColor: Colors.black, //Allows for transparency
     scaffoldBackgroundColor: const Color(0xff000000),
     primaryContrastingColor: Colors.grey[900],
-    textTheme: CupertinoTextThemeData(
-      textStyle: TextStyle(color: Colors.white),
-      actionTextStyle: TextStyle(color: Colors.white),
-      dateTimePickerTextStyle: TextStyle(color: Colors.white),
-      pickerTextStyle: TextStyle(color: Colors.white),
-    ),
+
   );
 
   CupertinoThemeData lightTheme = CupertinoThemeData(
     barBackgroundColor: Colors.grey[100],
     scaffoldBackgroundColor: Colors.grey[100],
-    textTheme: CupertinoTextThemeData(
-      actionTextStyle: TextStyle(color: Colors.black),
-      textStyle: TextStyle(color: Colors.white),
-      dateTimePickerTextStyle: TextStyle(color: Colors.white),
-      pickerTextStyle: TextStyle(color: Colors.white),
-    ),
   );
 
   CupertinoThemeData getCurrentTheme() {
@@ -57,5 +46,5 @@ class Options {
     SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
-  bool useDarkTheme = false;
+  bool useDarkTheme = true;
 }

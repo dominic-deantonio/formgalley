@@ -8,3 +8,4 @@ export 'preferencesView.dart';
 export 'onboardingView.dart';
 export 'errorView.dart';
 export 'logView.dart';
+export 'testView.dart';

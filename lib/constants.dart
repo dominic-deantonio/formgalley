@@ -1,4 +1,6 @@
 class Constants {
+  //https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/constants.dart
+  static const double kMinInteractiveDimension = 48.0;
   static String kAppName = 'Formgalley';
   static String kLegalese = 'Formgalley is not affiliated with or endorsed by the United States government, '
       'state government, or local government, or any government institution or department. Formgalley disclaims '
