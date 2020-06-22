@@ -81,9 +81,9 @@ class Util {
       out = 'Yesterday';
     } else if (d >= 2 && d < 7) {
       out = day;
-    } else if(d >=7){
+    } else if (d >= 7) {
       out = DateFormat('d MMM yy').format(olderDate).toString();
-    }else {
+    } else {
       out = 'Error :(';
     }
 

@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formgalley/User/data.dart';
-import 'package:formgalley/User/user.dart';
-import 'package:formgalley/Widgets/inputs/inputText.dart';
+import 'package:formgalley/Widgets/inputs/inputs.dart';
 
 class DataCard extends StatefulWidget {
   final Data data;
@@ -50,14 +49,12 @@ class _DataCardState extends State<DataCard> {
                   style: TextStyle(color: Colors.white),
                 ),
                 SizedBox(height: 5),
-                InputText(data: widget.data, input: input),
+                getInput(),
                 SizedBox(height: 5),
                 Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.data.prompt,
-                      style: TextStyle(color: Colors.white),
-                    )),
+                  alignment: Alignment.centerLeft,
+                  child: Text(widget.data.prompt, style: TextStyle(color: Colors.white)),
+                ),
               ],
             ),
           ),
@@ -75,6 +72,27 @@ class _DataCardState extends State<DataCard> {
       }
     } else {
       return CupertinoColors.inactiveGray;
+    }
+  }
+
+  Widget getInput() {
+    switch (widget.data.inputMethod) {
+      case InputMethod.text:
+        return InputText(data: widget.data, input: input);
+        break;
+      case InputMethod.currency:
+        return InputText(data: widget.data, input: input);
+        break;
+      case InputMethod.dropdown:
+        return InputDropdown(data: widget.data, input: input);
+        break;
+      case InputMethod.date:
+        return InputDate(data: widget.data, input: input);
+        break;
+      default:
+        return Text('Error producing input for ${widget.data.title}');
+
+        break;
     }
   }
 }

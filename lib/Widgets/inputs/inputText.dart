@@ -51,10 +51,16 @@ class _InputTextState extends State<InputText> {
                 width: constraints.maxWidth - subtract,
                 height: Constants.kMinInteractiveDimension,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black12),
-//                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    Visibility(
+                      visible: widget.data.inputMethod == InputMethod.currency,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:8.0),
+                        child: Text('\$'),
+                      ),
+                    ),
                     Expanded(
                       child: Focus(
                         onFocusChange: (hasFocus) => focus(hasFocus),
