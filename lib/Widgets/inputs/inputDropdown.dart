@@ -11,8 +11,9 @@ import '../../options.dart';
 class InputDropdown extends StatefulWidget {
   final ValueNotifier<String> input; //Disposed in parent
   final Data data; //Should only be read from this class
+  final Function onChanged;
 
-  InputDropdown({@required this.input, @required this.data});
+  InputDropdown({@required this.input, @required this.data, @required this.onChanged});
 
   @override
   _InputDropdownState createState() => _InputDropdownState();
@@ -75,16 +76,8 @@ class _InputDropdownState extends State<InputDropdown> {
 
   void clear() {
     widget.input.value = '';
-  }
-
-  void unfocus() {
-    widget.input.value = startingValue;
-    node.unfocus();
-  }
-
-  void focus(bool hasFocus) {
-    hasFocus ? subtract = 60 : subtract = 0;
-    startingValue = widget.input.value;
+    //Run the callback to update the changed list to rebuild the collection view (for the save button)
+    widget.onChanged(widget.input.value != widget.data.getDisplayValue());
   }
 
   Color getTextColor() {
@@ -95,7 +88,7 @@ class _InputDropdownState extends State<InputDropdown> {
 
   Widget getDropdown() {
     if (Platform.isIOS) {
-      return CupertinoPicker();
+      return Text('Need to implement iOS dropdown still');
     } else {
       return Material(
         color: Colors.transparent,
@@ -134,8 +127,8 @@ class _InputDropdownState extends State<InputDropdown> {
               }).toList();
             },
             onChanged: (newValue) {
-              print(newValue);
               widget.input.value = newValue;
+              widget.onChanged(newValue != widget.data.getDisplayValue());
             },
             isExpanded: true,
           ),

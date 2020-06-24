@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
                 switch (i) {
                   case 0:
                     return PreferencesView(
-                      navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
+                      navigateToMyInfo: () async => await goToFullScreen(CollectionView2()),
                       openOptionsModal: () async => await openOptions(),
                       giveFeedback: () async => await sendFeedback(),
                       viewLog: () async => await goToFullScreen(LogView()),
@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
                       runOnboarding: () => goToFullScreen(OnboardingView()),
                       onFormSelected: (formWithNoInput) async {
                         await goToFullScreen(
-                          CollectionView(
+                          CollectionView2(
                             selForm: formWithNoInput,
                             onStartProcessing: (formWithUserInput) async {
                               await goToFullScreenReplacement(

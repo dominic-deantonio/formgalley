@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/log.dart';
 import 'package:formgalley/options.dart';
@@ -42,37 +43,57 @@ class DialogManager {
     );
   }
 
-  static Future<bool> confirmCloseCollectionView(BuildContext context) async {
+  static Future<bool> confirmCloseCollectionView(BuildContext context, Function onSave) async {
     await Log.write('Asked user to confirm discarding changes in collection view.');
+    String title = 'Save Changes?';
+    String discard = 'Discard';
+    String cancel = 'Cancel';
+    String save = 'Save';
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         if (Platform.isIOS) {
           return CupertinoAlertDialog(
-            title: Text('Discard Changes?'),
+            title: Text(title),
             actions: <Widget>[
               CupertinoDialogAction(
-                child: Text('Cancel'),
+                child: Text(discard, style: TextStyle(color: Colors.red)),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+              CupertinoDialogAction(
+                child: Text(cancel, style: TextStyle(color: Colors.black)),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               CupertinoDialogAction(
-                child: Text('Discard', style: TextStyle(color: Colors.red)),
-                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(save),
+                onPressed: () async {
+                  await onSave();
+                  await Util.waitMilliseconds(500); //Let the user see the blue change in the background
+                  Navigator.of(context).pop(true);
+                },
               ),
             ],
           );
         } else {
           return AlertDialog(
-            title: Text('Discard Changes?'),
+            title: Text(title),
             actions: <Widget>[
               FlatButton(
-                child: Text('Cancel'),
+                child: Text(cancel, style: TextStyle(color: Colors.black)),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               FlatButton(
-                child: Text('Discard', style: TextStyle(color: Colors.red)),
+                child: Text(discard, style: TextStyle(color: Colors.red)),
                 onPressed: () => Navigator.of(context).pop(true),
+              ),
+              FlatButton(
+                child: Text(save, style: TextStyle(color: Colors.blue)),
+                onPressed: () async {
+                  await onSave();
+                  await Util.waitMilliseconds(500); //Let the user see the blue change in the background
+                  Navigator.of(context).pop(true);
+                },
               ),
             ],
           );

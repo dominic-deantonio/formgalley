@@ -1,5 +1,6 @@
 export 'splashView.dart';
 export 'collectionView.dart';
+export 'collectionView2.dart';
 export 'welcomeView.dart';
 export 'filesView.dart';
 export 'processingView.dart';

@@ -13,45 +13,34 @@ class TestView extends StatefulWidget {
 }
 
 class _TestViewState extends State<TestView> {
-  Exception e;
-  bool working = false;
-  bool didSend = false;
-  bool hasInternet = true;
-  ConnectivityResult connection;
-
-  @override
-  void initState() {
-    super.initState();
-    Connectivity().checkConnectivity().then((r) => connection = r);
-  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
         child: Center(
-          child: ListView(
-            children: <Widget>[
-              DataCard(User.instance.lastName),
-              SizedBox(height: 10),
-              DataCard(User.instance.branch),
-              SizedBox(height: 10),
-              DataCard(User.instance.birthDate),
-              SizedBox(height: 10),
-              DataCard(
-                Data(
-                  hintText: '99.99',
-                  title: 'Allotment amount',
-                  minRequiredChars: 5,
-                  prompt: 'The amount of the allotment. Use precise commas and decimals.',
-                  usedInForms: ['DD 2558'],
-                  inputMethod: InputMethod.currency,
-                  inputFormatters: Formatters.currency,
-                  textInputType: TextInputType.number,
-                ),
-              ),
-            ],
-          ),
+//          child: ListView(
+//            children: <Widget>[
+//              DataCard(User.instance.lastName),
+//              SizedBox(height: 10),
+//              DataCard(User.instance.branch),
+//              SizedBox(height: 10),
+//              DataCard(User.instance.birthDate),
+//              SizedBox(height: 10),
+//              DataCard(
+//                Data(
+//                  hintText: '99.99',
+//                  title: 'Allotment amount',
+//                  minRequiredChars: 5,
+//                  prompt: 'The amount of the allotment. Use precise commas and decimals.',
+//                  usedInForms: ['DD 2558'],
+//                  inputMethod: InputMethod.currency,
+//                  inputFormatters: Formatters.currency,
+//                  textInputType: TextInputType.number,
+//                ),
+//              ),
+//            ],
+//          ),
         ),
       ),
     );

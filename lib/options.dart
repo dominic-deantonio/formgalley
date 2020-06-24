@@ -15,10 +15,10 @@ class Options {
 
   CupertinoThemeData darkTheme = CupertinoThemeData(
     brightness: Brightness.dark,
-    barBackgroundColor: Colors.black, //Allows for transparency
-    scaffoldBackgroundColor: const Color(0xff000000),
+    barBackgroundColor: const Color(0xCC1A1A1A),
+    scaffoldBackgroundColor: const Color(0xff1A1A1A),
     primaryContrastingColor: Colors.grey[900],
-
+    primaryColor: const Color(0xff5E85C1),
   );
 
   CupertinoThemeData lightTheme = CupertinoThemeData(

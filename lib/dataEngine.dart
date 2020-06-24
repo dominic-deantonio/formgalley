@@ -43,11 +43,11 @@ class DataEngine {
   }
 
   /// Applies user input to the data objects in the collection view
-  static Future<void> applyInputToDataObjects(List<DataTile> dataTiles, List<Data> dataObjects) async {
-    for (int i = 0; i < dataTiles.length; i++) {
-      DataTile tile = dataTiles[i];
+  static Future<void> applyInputsToDataObjects(List<DataCard> dataCards, List<Data> dataObjects) async {
+    for (int i = 0; i < dataCards.length; i++) {
+      DataCard card = dataCards[i];
       //Run the values through a sanitizer first right here.
-      dataObjects[i].setValue(tile.getUserInput());
+      dataObjects[i].setValue(card.input.value);
     }
     await Log.write('Applied input to data objects.');
   }

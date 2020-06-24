@@ -11,8 +11,9 @@ import '../../options.dart';
 class InputDate extends StatefulWidget {
   final ValueNotifier<String> input; //Disposed in parent
   final Data data; //Should only be read from this class
+  final Function onChanged;
 
-  InputDate({@required this.input, @required this.data});
+  InputDate({@required this.input, @required this.data, @required this.onChanged});
 
   @override
   _InputDateState createState() => _InputDateState();
@@ -62,7 +63,10 @@ class _InputDateState extends State<InputDate> {
                                 'Select...',
                                 style: TextStyle(color: Colors.white30),
                               )
-                            : Text(Util.formatDisplayDate(Util.getDateFromStringStorageFormat(widget.input.value))),
+                            : Text(
+                                Util.formatDisplayDate(Util.getDateFromStringStorageFormat(widget.input.value)),
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ),
                     ),
                   ),
@@ -90,7 +94,12 @@ class _InputDateState extends State<InputDate> {
                   firstDate: DateTime(1900),
                   lastDate: DateTime(2200),
                 );
-                date == null ? widget.input.value = widget.input.value : widget.input.value = Util.getStringStorageFormatFromDate(date);
+                if (date == null) {
+                  widget.input.value = widget.input.value;
+                } else {
+                  widget.input.value = Util.getStringStorageFormatFromDate(date);
+                  widget.onChanged(widget.input.value != widget.data.getDisplayValue());
+                }
               }
             },
           ),
@@ -101,6 +110,8 @@ class _InputDateState extends State<InputDate> {
 
   void clear() {
     widget.input.value = '';
+    //Run the callback to update the changed list to rebuild the collection view (for the save button)
+    widget.onChanged(widget.input.value != widget.data.getDisplayValue());
   }
 
   Color getTextColor() {

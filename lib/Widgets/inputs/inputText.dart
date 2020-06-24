@@ -6,8 +6,9 @@ import 'package:formgalley/constants.dart';
 class InputText extends StatefulWidget {
   final ValueNotifier<String> input; //Disposed in parent
   final Data data; //Should only be read from this class
+  final Function(bool) onChanged; //Updates the list depending on true or false
 
-  InputText({@required this.input, @required this.data});
+  InputText({@required this.input, @required this.data, @required this.onChanged});
 
   @override
   _InputTextState createState() => _InputTextState();
@@ -57,7 +58,7 @@ class _InputTextState extends State<InputText> {
                     Visibility(
                       visible: widget.data.inputMethod == InputMethod.currency,
                       child: Padding(
-                        padding: const EdgeInsets.only(left:8.0),
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: Text('\$'),
                       ),
                     ),
@@ -73,7 +74,10 @@ class _InputTextState extends State<InputText> {
                           decoration: null,
                           inputFormatters: widget.data.inputFormatters,
                           controller: controller,
-                          onChanged: (v) => widget.input.value = v,
+                          onChanged: (v) {
+                            widget.input.value = v;
+                            widget.onChanged(v != widget.data.getDisplayValue());
+                          },
                         ),
                       ),
                     ),
@@ -104,7 +108,9 @@ class _InputTextState extends State<InputText> {
 
   void clear() {
     widget.input.value = '';
-    controller.clear();
+    controller.text = '';
+    //Run the callback to update the changed list to rebuild the collection view (for the save button)
+    widget.onChanged(controller.value.text != widget.data.getDisplayValue());
   }
 
   void unfocus() {
@@ -114,7 +120,7 @@ class _InputTextState extends State<InputText> {
   }
 
   void focus(bool hasFocus) {
-    hasFocus ? subtract = 60 : subtract = 0;
+    setState(() => hasFocus ? subtract = 60 : subtract = 0);
     startingValue = widget.input.value;
   }
 }

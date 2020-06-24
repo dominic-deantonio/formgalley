@@ -12,19 +12,18 @@ import 'package:formgalley/User/user.dart';
 import 'package:formgalley/Forms/Base/formExport.dart';
 import 'package:formgalley/dialogManager.dart';
 
-
 //Displays the prompts when getting information from the user needed for the form creation
-class CollectionView extends StatefulWidget {
+class CollectionView2 extends StatefulWidget {
   final FormBase selForm;
   final Function(FormBase) onStartProcessing;
 
-  CollectionView({this.selForm, this.onStartProcessing});
+  CollectionView2({this.selForm, this.onStartProcessing});
 
   @override
-  _CollectionViewState createState() => new _CollectionViewState();
+  _CollectionView2State createState() => new _CollectionView2State();
 }
 
-class _CollectionViewState extends State<CollectionView> {
+class _CollectionView2State extends State<CollectionView2> {
   final SlidableController controller = SlidableController();
   FormBase formToBuild;
   List<Data> dataObjects;
@@ -57,10 +56,10 @@ class _CollectionViewState extends State<CollectionView> {
 
   @override
   Widget build(BuildContext context) {
-    final List<DataTile> dataTiles = buildDataTiles();
+    List<DataCard> dataCards = buildDataCards();
 
     return WillPopScope(
-      onWillPop: () async => onPop(),
+      onWillPop: () async => onPop(dataCards),
       child: CupertinoPageScaffold(
         child: CupertinoScrollbar(
           child: CustomScrollView(
@@ -72,9 +71,9 @@ class _CollectionViewState extends State<CollectionView> {
                 border: Border(),
                 leading: CupertinoButton(
                     padding: EdgeInsets.all(0),
-                    child: buildingForm ? Text('Cancel') : Text('Done'),
+                    child: buildingForm ? Text('Cancel') : Text('Close'),
                     onPressed: () async {
-                      bool b = await onPop();
+                      bool b = await onPop(dataCards);
                       if (b ?? false) Navigator.pop(context);
                     }),
                 trailing: ValueListenableBuilder(
@@ -86,21 +85,21 @@ class _CollectionViewState extends State<CollectionView> {
                         padding: EdgeInsets.all(0),
                         child: widget.selForm == null ? changedData.length > 0 ? Text('Save') : Text('') : Text('Next'),
                         onPressed: () async {
-                          if (changedDataObjects.value.length > 0 || buildingForm) {
+                          //There are unsaved changes
+                          if (buildingForm) {
                             var connectivityResult = await Connectivity().checkConnectivity();
-                            if (connectivityResult != ConnectivityResult.none) {
-                              await processInput(dataTiles);
-                              dataTiles.forEach((tile) => tile.updateTileChangedStatus());
-                            } else {
+                            if (connectivityResult == ConnectivityResult.none) {
                               await DialogManager.alertUserNoConnection(context);
+                              return;
                             }
                           }
+                          await processInput(dataCards);
                         },
                       );
                     }),
               ),
               SliverList(
-                delegate: SliverChildListDelegate(dataTiles),
+                delegate: SliverChildListDelegate(dataCards),
               )
             ],
           ),
@@ -109,69 +108,54 @@ class _CollectionViewState extends State<CollectionView> {
     );
   }
 
-  List<DataTile> buildDataTiles() {
-    var items = List<DataTile>();
+  List<DataCard> buildDataCards() {
+    var items = List<DataCard>();
     dataObjects.forEach((data) {
-      items.add(DataTile(
-        data: data,
-        changedDataNotifier: changedDataObjects,
-      ));
+      items.add(DataCard(data, onChanged: (isDifferent) => updateChangedList(isDifferent, data)));
     });
     return items;
   }
 
-//  List<Dismissible> getDismissibles(List<DataTile> tiles, SlidableController controller) {
-//    var items = List<Dismissible>();
-//    tiles.forEach(
-//      (tile) {
-//        items.add(
-//          Dismissible(
-//            key: UniqueKey(),
-//            child: tile,
-//            confirmDismiss: (f) async {
-//              tile.userInputNotifier.value = '';
-//              tile.updateTileChangedStatus();
-//              return false;
-//            },
-//            dismissThresholds: {DismissDirection.startToEnd: 2},
-//            background: Container(),
-//            secondaryBackground: Padding(
-//              padding: const EdgeInsets.only(right: 10),
-//              child: Align(
-//                alignment: Alignment.centerRight,
-//                child: Icon(
-//                  Icons.clear,
-//                  color: Colors.red,
-//                  size: 35,
-//                ),
-//              ),
-//            ),
-//          ),
-//        );
-//      },
-//    );
-//    return items;
-//  }
-
-  Future<void> processInput(List<DataTile> dataTiles) async {
-//    //Run the save data methods here
-//    await DataEngine.applyInputToDataObjects(dataTiles, dataObjects);
-//    await DataEngine.applyNewDataToUserData(dataObjects);
-//    await DB.saveUserData(dataObjects);
-//    print('Saved data');
-//
-//    if (buildingForm) {
-//      formToBuild = await DataEngine.applyInputToFormDataFields(formToBuild, dataObjects);
-//      widget.onStartProcessing(formToBuild);
-//    } else {
-//      initialize();
-//    }
+  void updateChangedList(bool b, Data data) {
+    List<Data> newList = List.from(changedDataObjects.value);
+    if (b) {
+      if (!changedDataObjects.value.contains(data)) {
+        newList.add(data);
+        changedDataObjects.value = newList;
+      }
+    } else {
+      if (changedDataObjects.value.contains(data)) {
+        newList.remove(data);
+        changedDataObjects.value = newList;
+      }
+    }
   }
 
-  Future<bool> onPop() async {
+  Future<void> processInput(List<DataCard> dataCards) async {
+    //Run the save data methods here
+    await DataEngine.applyInputsToDataObjects(dataCards, dataObjects);
+    await DataEngine.applyNewDataToUserData(dataObjects);
+    await DB.saveUserData(dataObjects);
+    print('Saved data');
+
+    if (buildingForm) {
+      formToBuild = await DataEngine.applyInputToFormDataFields(formToBuild, dataObjects);
+      widget.onStartProcessing(formToBuild);
+    } else {
+      initialize();
+      changedDataObjects.value.clear();
+      setState(() => dataCards = buildDataCards());
+    }
+  }
+
+  Future<bool> onPop(List<DataCard> dataCards) async {
     bool didChange = changedDataObjects.value.length > 0;
     bool doClose = true;
-    if (didChange) doClose = await DialogManager.confirmCloseCollectionView(context, (){});
+    if (didChange)
+      doClose = await DialogManager.confirmCloseCollectionView(context, () async {
+        await processInput(dataCards);
+        print('Did save');
+      });
     return doClose;
   }
 }
