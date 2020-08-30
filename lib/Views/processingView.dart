@@ -19,6 +19,7 @@ class _ProcessingViewState extends State<ProcessingView> {
   bool processing = true;
   String status = 'Downloading form content';
   CompletedForm newPdf;
+  String statusImage = 'images/ProcessingPdf.png';
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _ProcessingViewState extends State<ProcessingView> {
       String newHtml = await widget.formToBuild.buildForm(formHTML[0]).timeout(Duration(seconds: 10));
       newPdf = await PdfEngine.generatePdf(newHtml, widget.formToBuild);
       setState(() {
+        statusImage = 'images/FileComplete.png';
         status = 'Done - form saved.';
         processing = false;
       });
@@ -55,14 +57,13 @@ class _ProcessingViewState extends State<ProcessingView> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
         border: Border(),
-//        backgroundColor: Colors.white,
       ),
       child: Column(
         children: <Widget>[
           Expanded(child: Container()),
-          Center(child: processing ? CupertinoActivityIndicator() : Container()),
           Text(status),
-          Expanded(child: Container()),
+          FractionallySizedBox(widthFactor: .4, child: Image.asset(statusImage)),
+          Center(child: processing ? CupertinoActivityIndicator() : Container()),
           processing
               ? Container()
               : CupertinoButton(

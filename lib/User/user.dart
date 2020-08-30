@@ -30,7 +30,7 @@ class User {
       addressZip,
       personalPhone
     ];
-    Log.write('Initialized user.');
+    print('Initialized user.');
   }
 
   //Class methods
@@ -58,7 +58,7 @@ class User {
         }
       }
     }
-    Log.write('Assigned local data to user.');
+    print('Assigned local data to user.');
   }
 
   //Data fields--------------------------------------

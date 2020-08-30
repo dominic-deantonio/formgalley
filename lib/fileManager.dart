@@ -34,7 +34,7 @@ class FileManager {
       }
     }
 
-    await Log.write('Retrieved ${pdfs.length} files from system.');
+    print('Retrieved ${pdfs.length} files from system.');
     return pdfs;
   }
 
@@ -50,10 +50,10 @@ class FileManager {
 
     try {
       await file.delete();
-      await Log.write('Deleted file from directory.');
+      print('Deleted file from directory.');
       return true;
     } catch (err) {
-      await Log.write('Failed to delete file from directory.');
+      print('Failed to delete file from directory.');
       return false;
     }
   }
@@ -65,13 +65,18 @@ class FileManager {
       sharePanelTitle: 'Send this ${f.formName}',
       subject: '${f.formName} sent from ${Constants.kAppName}',
     );
-    await Log.write('Sent ${f.formName} using share panel');
+    print('Sent ${f.formName} using share panel');
   }
 
   //--------------------Logging
   static Future<void> writeToLog(String s) async {
     var path = await getFilePath();
-    File log = File('$path/log.txt');
+    File log;
+    try {
+      log = File('$path/log.txt');
+    } on FileSystemException {
+      print('ji');
+    }
     String entries = await log.readAsString();
 
     await log.writeAsString('$s\n' + entries);

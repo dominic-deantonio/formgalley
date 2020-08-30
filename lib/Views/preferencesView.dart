@@ -6,9 +6,7 @@ import 'package:formgalley/Utilities/util.dart';
 import 'package:formgalley/Widgets/widgetExporter.dart';
 import 'package:formgalley/constants.dart';
 import 'package:formgalley/encryption.dart';
-import 'package:formgalley/fileManager.dart';
 import 'package:package_info/package_info.dart';
-import 'viewsExporter.dart';
 
 //Displays the prompts when getting information from the user needed for the form creation
 class PreferencesView extends StatefulWidget {
@@ -44,7 +42,6 @@ class _PreferencesViewState extends State<PreferencesView> {
           physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
-//              backgroundColor: Colors.white,
               largeTitle: Text('Preferences'),
               border: Border(),
             ),
@@ -117,13 +114,13 @@ class _PreferencesViewState extends State<PreferencesView> {
 //                      widget.viewLog();
 //                    },
 //                  ),
-                  StandardButton(
-                    leading: Icon(CupertinoIcons.folder_solid),
-                    title: 'Test',
-                    onTap: () {
-                      Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => TestView()));
-                    },
-                  ),
+//                  StandardButton(
+//                    leading: Icon(CupertinoIcons.folder_solid),
+//                    title: 'Test',
+//                    onTap: () {
+//                      Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => TestView()));
+//                    },
+//                  ),
                 ],
               ),
             )

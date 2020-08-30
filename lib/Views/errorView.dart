@@ -8,9 +8,9 @@ import 'package:package_info/package_info.dart';
 
 class ErrorView extends StatefulWidget {
   final Exception exception;
-  final String summary;
+  final String view;
 
-  ErrorView(this.exception, this.summary);
+  ErrorView(this.exception, this.view);
 
   @override
   _ErrorViewState createState() => new _ErrorViewState();
@@ -44,7 +44,7 @@ class _ErrorViewState extends State<ErrorView> {
           '\nexception: ${e.runtimeType.toString()}'
           '\nplatform: ${Platform.operatingSystem} ${Platform.version}'
           '\nconnection: $connection'
-          '\noffender: ${widget.summary}';
+          '\n${widget.view}: ${e.toString()}';
       return out;
     }
 
@@ -63,7 +63,7 @@ class _ErrorViewState extends State<ErrorView> {
                 style: TextStyle(fontSize: 15),
               ),
               Expanded(flex: 4, child: Container()),
-              Image.asset('images/sadFace.png', height: 230),
+              Image.asset('images/NoConnection.png', height: 300),
               Expanded(
                 flex: 3,
                 child: Center(child: hasInternet ? Text('') : Text('No internet connection')),

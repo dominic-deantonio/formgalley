@@ -18,13 +18,15 @@ class Options {
     barBackgroundColor: const Color(0xCC1A1A1A),
     scaffoldBackgroundColor: const Color(0xff1A1A1A),
     primaryContrastingColor: Colors.grey[900],
-    primaryColor: const Color(0xff5E85C1),
+    primaryColor: CupertinoColors.activeBlue,
   );
 
   CupertinoThemeData lightTheme = CupertinoThemeData(
     barBackgroundColor: Colors.grey[100],
     scaffoldBackgroundColor: Colors.grey[100],
   );
+
+  bool useDarkTheme = false;
 
   CupertinoThemeData getCurrentTheme() {
     if (useDarkTheme) {
@@ -35,10 +37,12 @@ class Options {
   }
 
   CupertinoThemeData switchTheme() {
-    Options.instance.useDarkTheme = !Options.instance.useDarkTheme;
-    SystemChrome.setSystemUIOverlayStyle(Options.instance.useDarkTheme ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    useDarkTheme = !useDarkTheme;
+    SystemChrome.setSystemUIOverlayStyle(useDarkTheme ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
 
-    Log.write('Switched theme to ${Options.instance.useDarkTheme ? 'dark' : 'light'}.');
+
+    print('Switched theme to ${useDarkTheme ? 'dark' : 'light'}.');
+
     return getCurrentTheme();
   }
 
@@ -46,5 +50,4 @@ class Options {
     SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
-  bool useDarkTheme = true;
 }

@@ -108,19 +108,17 @@ class _FilesViewState extends State<FilesView> {
               delegate: SliverChildListDelegate(
                 forms.length == 0
                     ? [
-                        SizedBox(
-                          height: 40,
-                        ),
+                        SizedBox(height: 70),
                         Center(
                           child: Text(
-                            'No files created yet.',
+                            'No files created yet',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 15,
                             ),
                           ),
                         ),
-                        FractionallySizedBox(widthFactor: .75, child: Image.asset('images/guyWithPencil.jpg'))
+                        FractionallySizedBox(widthFactor: .5, child: Image.asset('images/NoCurrentFiles.png'))
                       ]
                     : [],
               ),

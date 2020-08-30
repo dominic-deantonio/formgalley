@@ -63,7 +63,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    Log.start();
   }
 
   void updateFilesTab() async {
@@ -123,7 +122,7 @@ class _HomeState extends State<Home> {
                 switch (i) {
                   case 0:
                     return PreferencesView(
-                      navigateToMyInfo: () async => await goToFullScreen(CollectionView2()),
+                      navigateToMyInfo: () async => await goToFullScreen(CollectionView()),
                       openOptionsModal: () async => await openOptions(),
                       giveFeedback: () async => await sendFeedback(),
                       viewLog: () async => await goToFullScreen(LogView()),
@@ -135,7 +134,7 @@ class _HomeState extends State<Home> {
                       runOnboarding: () => goToFullScreen(OnboardingView()),
                       onFormSelected: (formWithNoInput) async {
                         await goToFullScreen(
-                          CollectionView2(
+                          CollectionView(
                             selForm: formWithNoInput,
                             onStartProcessing: (formWithUserInput) async {
                               await goToFullScreenReplacement(

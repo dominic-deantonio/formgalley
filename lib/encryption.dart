@@ -9,7 +9,7 @@ class Encryption {
   static const String storageKeyKey = 'encryptionKey'; //The key to the value: key
   static final iv = IV.fromLength(16);
   static final encrypter = Encrypter(AES(key));
-  static final secureStorage = new FlutterSecureStorage(); //Hide the key here - sorry, hackers.
+  static final secureStorage = new FlutterSecureStorage(); //Hide the key here
 
   static Future<String> initialize() async {
     var prefs = await SharedPreferences.getInstance();
@@ -18,6 +18,7 @@ class Encryption {
 
     //check if db has flag 'didInitializeEncryptionKey'
     await retrieveKeyFromSecureStorage();
+
     if (key == null) {
       result = 'Retrieved key was null.';
       if (didInitializeEncryption == true) {
@@ -40,7 +41,7 @@ class Encryption {
     } else {
       result = 'Retrieved an encryption key from secure storage with no issues.';
     }
-    await Log.write('Initialized security protocols.');
+    print('Initialized security protocols.');
     return result;
   }
 

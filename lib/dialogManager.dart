@@ -18,7 +18,7 @@ class DialogManager {
     String title = 'No Internet';
     String option = 'Ok';
 
-    await Log.write('Alerted user of no network connection');
+    print('Alerted user of no network connection');
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -44,7 +44,7 @@ class DialogManager {
   }
 
   static Future<bool> confirmCloseCollectionView(BuildContext context, Function onSave) async {
-    await Log.write('Asked user to confirm discarding changes in collection view.');
+    print('Asked user to confirm discarding changes in collection view.');
     String title = 'Save Changes?';
     String discard = 'Discard';
     String cancel = 'Cancel';
@@ -110,11 +110,12 @@ class DialogManager {
       } catch (e) {
         print('Failed to send email');
       }
-      await Log.write('Launched email for feedback flow.');
+      print('Launched email for feedback flow.');
     }
 
-    await Log.write('Displayed send feedback modal.');
+    print('Displayed send feedback modal.');
     showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10),
@@ -132,13 +133,14 @@ class DialogManager {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 StandardButton(
-                    leading: Icon(Icons.bug_report),
-                    title: 'Bug Report',
-                    onTap: () async {
-                      String subj = 'Bug Report';
-                      String body = 'Please enter a detailed message about the bug you found:';
-                      await sendEmail(subj, body);
-                    }),
+                  leading: Icon(Icons.bug_report),
+                  title: 'Bug Report',
+                  onTap: () async {
+                    String subj = 'Bug Report';
+                    String body = 'Please enter a detailed message about the bug you found:';
+                    await sendEmail(subj, body);
+                  },
+                ),
                 StandardButton(
                   leading: Icon(Icons.description),
                   title: 'Form Request',
@@ -167,7 +169,7 @@ class DialogManager {
   }
 
   static Future<void> openOptions({BuildContext context, Function(CupertinoThemeData) updateTheme}) async {
-    await Log.write('Displayed options modal.');
+    print('Displayed options modal.');
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(

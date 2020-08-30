@@ -18,7 +18,7 @@ class DB {
     DocumentReference docRef = Firestore.instance.document(form.contentPath); //Each form knows where its content is
     DocumentSnapshot doc = await docRef.get(source: Source.serverAndCache);
     contentList.add(doc.data['content']);
-    await Log.write('Fetched ${form.formName} content. Content is from ${doc.metadata.isFromCache ? 'cache' : 'server'}.');
+    print('Fetched ${form.formName} content. Content is from ${doc.metadata.isFromCache ? 'cache' : 'server'}.');
     return contentList;
   }
 
@@ -39,7 +39,7 @@ class DB {
       formMap.add(current.data);
     }
 
-    await Log.write('Fetched available forms. Data is from ${snapshot.metadata.isFromCache? 'cache' : 'server'}');
+    print('Fetched available forms. Data is from ${snapshot.metadata.isFromCache? 'cache' : 'server'}');
     return formMap;
   }
 

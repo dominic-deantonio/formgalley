@@ -45,19 +45,27 @@ class _SplashViewState extends State<SplashView> {
       try {
         setState(() => status = 'Initializing local database');
         await DB.initializeLocalDb().timeout(Duration(seconds: 10));
+        print('Initialized database');
+
         setState(() => status = 'Initializing encryption');
         await Encryption.initialize().timeout(Duration(seconds: 10));
+        print('Initialized encryption');
+
         setState(() => status = 'Getting user data');
         var maps = await DB.getUserDataFromLocalDb().timeout(Duration(seconds: 10));
-        setState(() => status = 'Loading user data');
+        print('Got user data');
+
+        setState(() => status = 'Mapping user data');
         await User.instance.loadUserDataToInstance(maps).timeout(Duration(seconds: 10));
+        print('Mapped user data');
+
         setState(() => status = 'Loading application');
         await Util.waitMilliseconds(1500);
         hasInternet = true;
         widget.onSuccessfulLoad();
         print('Initialized with no errors');
       } catch (e) {
-        widget.onException(e, 'initializing splash');
+        widget.onException(e, 'splashView');
       }
     }
   }

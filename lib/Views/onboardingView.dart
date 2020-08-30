@@ -13,7 +13,8 @@ class OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<OnboardingView> {
   final String msg =
-      'Your data is stored on this device - never transmitted over a network. If you delete the app, your data will be lost forever.';
+      'Your data is stored on this device - never transmitted over a network. '
+      'If you delete the app, your data will be lost forever.';
   SharedPreferences prefs;
   PageController controller = PageController();
 
@@ -30,7 +31,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 
   void finishOnboarding() {
-    prefs.setBool('finishedOnboarding', false); //Change this at production
+    prefs.setBool('finishedOnboarding', true); //Change this at production
     Navigator.of(context).pop();
   }
 
@@ -57,20 +58,24 @@ class _OnboardingViewState extends State<OnboardingView> {
                 children: <Widget>[
                   page(
                     msg: 'Welcome to Formgalley!',
-                    sub: 'Generate forms on the go',
+                    subtitle: 'Generate forms on the go',
+                    imageName: 'Welcome.png',
                   ),
                   page(
                     msg: 'We\'ll handle the boring part',
-                    sub: 'Use your saved data to quickly create new forms',
+                    subtitle: 'Use your saved data to quickly create new forms',
+                    imageName: 'ProcessingPdf.png',
                   ),
                   page(
                     msg: 'Privacy is Paramount',
-                    sub: 'Personal data is encrypted and never transmitted over a network',
+                    subtitle: 'Personal data is encrypted and never transmitted over a network',
+                    imageName: 'EncryptionSafe.png',
                   ),
                   page(
                     msg: 'Get notified when new forms are added',
-                    sub: 'Enable notifications to get instant access to new forms',
+                    subtitle: 'Enable notifications to get instant access to new forms',
                     onPressed: () => print('Clicked the notifications button'),
+                    imageName: 'FileComplete.png',
                   ),
                 ],
               ),
@@ -97,14 +102,13 @@ class _OnboardingViewState extends State<OnboardingView> {
     );
   }
 
-  Widget page({String msg, String sub, Function onPressed}) {
+  Widget page({String msg, String subtitle, Function onPressed, String imageName}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Image.network(
-                'https://image.freepik.com/free-vector/hand-drawn-checklist-background_23-2148070711.jpg'),
+            child: Image.asset('images/$imageName'),
           ),
           onPressed != null
               ? CupertinoButton(
@@ -121,7 +125,7 @@ class _OnboardingViewState extends State<OnboardingView> {
           Padding(
             padding: const EdgeInsets.only(left: 30, right: 30),
             child: Text(
-              sub,
+              subtitle,
               style: TextStyle(fontSize: 13),
               textAlign: TextAlign.center,
             ),

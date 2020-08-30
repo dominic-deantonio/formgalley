@@ -15,9 +15,9 @@ class DataEngine {
     String formNum = form['formNum'];
     if (reg.containsKey(formNum)) {
       out = reg[formNum];
-      await Log.write('Found $formNum in registry.');
+      print('Found $formNum in registry.');
     } else {
-      await Log.write('$formNum not found in registry.');
+      print('$formNum not found in registry.');
     }
     return out;
   }
@@ -27,7 +27,7 @@ class DataEngine {
     var dataRequirements = List<Data>();
     dataRequirements.addAll(User.instance.getDataForForm(form.formName));
     dataRequirements.addAll(form.tempData.values.toList());
-    Log.write('Found ${dataRequirements.length} data objects for ${form.formName}.');
+    print('Found ${dataRequirements.length} data objects for ${form.formName}.');
     return dataRequirements;
   }
 
@@ -39,17 +39,17 @@ class DataEngine {
         numPersist++;
       }
     }
-    await Log.write('Sent $numPersist of ${dataObjects.length} data to the user.');
+    print('Sent $numPersist of ${dataObjects.length} data to the user.');
   }
 
   /// Applies user input to the data objects in the collection view
-  static Future<void> applyInputsToDataObjects(List<DataCard> dataCards, List<Data> dataObjects) async {
+  static Future<void> applyInputsToDataObjects(List<DataTile> dataCards, List<Data> dataObjects) async {
     for (int i = 0; i < dataCards.length; i++) {
-      DataCard card = dataCards[i];
+      DataTile card = dataCards[i];
       //Run the values through a sanitizer first right here.
       dataObjects[i].setValue(card.input.value);
     }
-    await Log.write('Applied input to data objects.');
+    print('Applied input to data objects.');
   }
 
   /// Applies data objects from collection view to the FormBase non-persistent data objects (Re-matches the temp data).
@@ -63,7 +63,7 @@ class DataEngine {
       }
     }
     form.tempData = newTempData;
-    await Log.write('Matched the temp data for ${form.formName} back to the form');
+    print('Matched the temp data for ${form.formName} back to the form');
     return form;
   }
 }
